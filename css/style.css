@@ -1321,10 +1321,11 @@ body {
 /* Coupon Interactive Cards in Celebration Modal */
 .coupon-card {
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   cursor: pointer;
   background: white;
   border: 1.5px solid rgba(255, 107, 139, 0.2);
@@ -1349,15 +1350,24 @@ body {
 }
 
 .claim-badge {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--primary-pink), #ff477e);
   color: white;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(255, 107, 139, 0.3);
   transition: all 0.2s ease;
+  line-height: 1;
 }
 
 .coupon-card.claimed .claim-badge {
   background: #20c997;
+  box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
 }

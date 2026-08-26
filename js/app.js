@@ -1255,15 +1255,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.className = 'coupon-card' + (isClaimed ? ' claimed' : '');
       
       card.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
-          <span style="font-size: 1.6rem;">${coupon.icon}</span>
-          <div>
-            <strong style="font-size: 0.88rem; color: var(--deep-wine); display: block;">${escapeHtml(coupon.title)}</strong>
-            <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(coupon.desc)}</span>
-            ${isClaimed ? `<span style="display: block; font-size: 0.72rem; color: #20c997; font-weight: 700; margin-top: 2px;">✅ Sudah Diklaim (${formatDateIndo(claimedData.claimedAt ? claimedData.claimedAt.split('T')[0] : '')})</span>` : ''}
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+          <span style="font-size: 1.6rem; flex-shrink: 0;">${coupon.icon}</span>
+          <div style="flex: 1; min-width: 0; text-align: left;">
+            <strong style="font-size: 0.88rem; color: var(--deep-wine); display: block; line-height: 1.3;">${escapeHtml(coupon.title)}</strong>
+            <span style="font-size: 0.74rem; color: var(--text-muted); display: block; margin-top: 2px; line-height: 1.3;">${escapeHtml(coupon.desc)}</span>
+            ${isClaimed ? `<span style="display: inline-block; font-size: 0.72rem; color: #20c997; font-weight: 700; margin-top: 4px;">✅ Sudah Diklaim (${formatDateIndo(claimedData.claimedAt ? claimedData.claimedAt.split('T')[0] : '')})</span>` : ''}
           </div>
         </div>
-        <div>
+        <div style="flex-shrink: 0; margin-left: 6px;">
           <span class="claim-badge">${isClaimed ? 'TERKLAIM ✅' : 'KLAIM 💌'}</span>
         </div>
       `;
