@@ -1371,3 +1371,104 @@ body {
   background: #20c997;
   box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
 }
+
+/* =========================================================
+   🌿 SAGE & MINT GREEN THEME (Warna Kesukaan Rifai) 🌿
+   ========================================================= */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 107, 139, 0.3);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--deep-wine);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 14px rgba(255, 107, 139, 0.25);
+}
+
+/* Green Theme Overrides */
+body.theme-green {
+  --primary-pink: #2d6a4f;
+  --secondary-pink: #52b788;
+  --blush: #e8f5e9;
+  --warm-gold: #d4a373;
+  --gold-glow: rgba(212, 163, 115, 0.4);
+  --deep-wine: #1b4332;
+  --text-dark: #1e3329;
+  --text-muted: #4f775e;
+  
+  --bg-gradient: linear-gradient(135deg, #f3faf6 0%, #e2f4eb 35%, #d8f3dc 70%, #f0fdf4 100%);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-card: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-shadow: 0 12px 35px rgba(45, 106, 79, 0.12);
+  --glow-shadow: 0 8px 25px rgba(82, 183, 136, 0.3);
+}
+
+body.theme-green .theme-toggle-btn {
+  border-color: rgba(82, 183, 136, 0.4);
+  background: #e8f5e9;
+  color: #1b4332;
+}
+
+body.theme-green .romantic-login-overlay {
+  background: radial-gradient(circle at center, rgba(232, 245, 233, 0.96) 0%, rgba(183, 228, 199, 0.94) 100%);
+}
+
+body.theme-green .login-glass-card {
+  border-color: rgba(82, 183, 136, 0.35);
+  box-shadow: 0 25px 60px rgba(45, 106, 79, 0.25), 0 0 40px rgba(183, 228, 199, 0.4);
+}
+
+body.theme-green .login-heart-badge {
+  background: linear-gradient(135deg, #e8f5e9, #d8f3dc);
+  border-color: rgba(82, 183, 136, 0.4);
+  box-shadow: 0 8px 25px rgba(82, 183, 136, 0.25);
+}
+
+body.theme-green .bday-celebration-box {
+  background: linear-gradient(135deg, #eafaf1 0%, #ffffff 100%);
+}
+
+body.theme-green .now-playing-banner {
+  background: #edf7f1;
+  border-left-color: var(--primary-pink);
+}
+
+body.theme-green .playlist-item.active {
+  background: #e4f6ec;
+  border-color: #74c69d;
+}
+
+body.theme-green .fab-btn {
+  background: linear-gradient(135deg, #40916c, #2d6a4f);
+  box-shadow: 0 10px 30px rgba(45, 106, 79, 0.45);
+}
+
+body.theme-green .music-floating-btn {
+  background: linear-gradient(135deg, #52b788, #2d6a4f);
+  box-shadow: 0 10px 25px rgba(45, 106, 79, 0.4);
+}
+
+body.theme-green .btn-primary {
+  background: linear-gradient(135deg, #40916c, #2d6a4f);
+  box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
+}
+
+body.theme-green .tab-btn.active {
+  color: #2d6a4f;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.18);
+}

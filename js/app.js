@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Setup ALL UI Elements & Listeners IMMEDIATELY (Zero Milliseconds Latency)
   initBackgroundCanvas();
+  initThemeSwitcher();
   initRomanticLogin();
   updateProfileDisplays();
   initTogetherCounter();
@@ -219,7 +220,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         ctx.globalAlpha = Math.max(0.1, Math.min(0.65, p.alpha));
 
         if (p.type === 'heart') {
-          ctx.fillStyle = '#ff8e9e';
+          ctx.fillStyle = document.body.classList.contains('theme-green') ? '#52b788' : '#ff8e9e';
           ctx.translate(p.x, p.y);
           ctx.beginPath();
           const top = p.size * 0.3;
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           ctx.closePath();
           ctx.fill();
         } else {
-          ctx.fillStyle = '#ffd166';
+          ctx.fillStyle = document.body.classList.contains('theme-green') ? '#b7e4c7' : '#ffd166';
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size / 3, 0, Math.PI * 2);
           ctx.fill();
@@ -244,6 +245,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     render();
+  }
+
+  // --- Theme Switcher (Pink Anggunly / Hijau Muda Rifai) ---
+  function initThemeSwitcher() {
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+    const toggleIcon = document.getElementById('theme-toggle-icon');
+    const toggleLabel = document.getElementById('theme-toggle-label');
+
+    // Load saved theme preference (default is 'pink')
+    const savedTheme = localStorage.getItem('mv_color_theme') || 'pink';
+    applyTheme(savedTheme);
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const isCurrentlyGreen = document.body.classList.contains('theme-green');
+        const nextTheme = isCurrentlyGreen ? 'pink' : 'green';
+        applyTheme(nextTheme);
+        try { localStorage.setItem('mv_color_theme', nextTheme); } catch (e) { }
+        window.confetti.burst({ count: 25 });
+      });
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'green') {
+        document.body.classList.add('theme-green');
+        if (toggleIcon) toggleIcon.textContent = '💖';
+        if (toggleLabel) toggleLabel.textContent = 'Pink';
+        if (toggleBtn) toggleBtn.title = 'Ganti ke Tema Pink (Kesukaan Anggunly)';
+      } else {
+        document.body.classList.remove('theme-green');
+        if (toggleIcon) toggleIcon.textContent = '🌿';
+        if (toggleLabel) toggleLabel.textContent = 'Hijau';
+        if (toggleBtn) toggleBtn.title = 'Ganti ke Tema Hijau Muda (Kesukaan Rifai)';
+      }
+    }
   }
 
   // --- Live Relationship Counter ---
