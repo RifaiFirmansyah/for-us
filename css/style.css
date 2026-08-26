@@ -114,23 +114,181 @@ body {
   gap: 14px;
 }
 
-/* Music Floating Player in Nav */
-.music-badge {
+/* Floating Music Button (Bottom-Left - Icon Only, Perfectly Matches FAB) */
+.music-floating-btn {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  z-index: 999;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-pink), #ff477e);
+  color: white;
+  border: none;
+  box-shadow: 0 10px 30px rgba(255, 71, 126, 0.45);
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 107, 139, 0.2);
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255, 107, 139, 0.1);
+  font-size: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.music-floating-btn:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 15px 40px rgba(255, 71, 126, 0.65);
+}
+
+.music-floating-btn.playing {
+  animation: pulseFabMusic 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseFabMusic {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(255, 71, 126, 0.45);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 35px rgba(255, 71, 126, 0.8), 0 0 0 10px rgba(255, 107, 139, 0.2);
+    transform: scale(1.04);
+  }
+}
+
+.fab-music-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+/* Floating Playlist Card (Opens Above the Bottom-Left FAB) */
+.floating-playlist-card {
+  position: fixed;
+  bottom: 102px;
+  left: 32px;
+  width: 330px;
+  max-width: calc(100vw - 64px);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), 0 0 30px rgba(255, 107, 139, 0.35);
+  z-index: 99999;
+  display: none;
+}
+
+@keyframes floatDrawerUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.floating-playlist-card.active {
+  display: block !important;
+  animation: floatDrawerUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.playlist-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ffeef2;
+}
+
+/* Now Playing Banner */
+.now-playing-banner {
+  background: linear-gradient(135deg, #fff0f5 0%, #ffe8ee 100%);
+  border: 1px solid #ffd1dc;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+
+.now-playing-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--deep-wine);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.playlist-tracks-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 2px;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  border: 1px solid rgba(255, 107, 139, 0.12);
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.music-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--glow-shadow);
+.playlist-item:hover {
+  background: #fff0f3;
+  border-color: var(--primary-pink);
+  transform: translateX(3px);
+}
+
+.playlist-item.active {
+  background: linear-gradient(135deg, #fff0f3, #ffe4eb);
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 12px rgba(255, 107, 139, 0.15);
+}
+
+.playlist-item-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.playlist-item.active .playlist-item-title {
+  color: #d6336c;
+}
+
+.playlist-item-status {
+  font-size: 0.85rem;
+}
+
+.playlist-add-quick-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 9px;
+  background: #fff5f7;
+  border: 1px dashed var(--primary-pink);
+  border-radius: var(--radius-sm);
+  color: var(--primary-pink);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.playlist-add-quick-btn:hover {
+  background: var(--primary-pink);
+  color: white;
 }
 
 .vinyl-disc {

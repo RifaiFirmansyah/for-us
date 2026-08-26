@@ -1,15 +1,12 @@
 // js/app.js - Main Interactive Application Logic
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Initialize Database
-  await window.memoryDB.init();
-
-  // 2. Application State
+  // 1. Synchronous Application State Defaults
   const state = {
-    myName: await window.memoryDB.getSetting('myName', 'Rama'),
-    herName: await window.memoryDB.getSetting('herName', 'Sasa'),
-    startDate: await window.memoryDB.getSetting('startDate', getPresetStartDate()),
-    birthdayDate: await window.memoryDB.getSetting('bdayDate', getPresetBdayDate()),
+    myName: 'Rama',
+    herName: 'Sasa',
+    startDate: getPresetStartDate(),
+    birthdayDate: getPresetBdayDate(),
     currentFilter: 'all',
     selectedCalDate: null,
     calViewDate: new Date(),
@@ -17,7 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     uploadedFileBlob: null,
     uploadedFileUrl: null,
     uploadedFileType: 'photo',
-    activeObjectUrls: []
+    activeObjectUrls: [],
+    customTracks: []
   };
 
   // Helper default dates
@@ -53,21 +51,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Pre-seed sample memories if empty
-  await seedInitialMemories();
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
-  // 3. Setup UI Elements & Listeners
+  // 2. Setup ALL UI Elements & Listeners IMMEDIATELY (Zero Milliseconds Latency)
   initBackgroundCanvas();
   updateProfileDisplays();
   initTogetherCounter();
   initBirthdayCountdown();
   initMusicPlayer();
-  await refreshMemories();
-  renderCalendar();
   initModals();
   initUploadForm();
   initOpenWhenLetters();
   initBirthdayCelebration();
+
+  // 3. Initialize Database & Sync Data in Background
+  try {
+    await window.memoryDB.init();
+
+    state.myName = (await window.memoryDB.getSetting('myName', state.myName)) || state.myName;
+    state.herName = (await window.memoryDB.getSetting('herName', state.herName)) || state.herName;
+    state.startDate = (await window.memoryDB.getSetting('startDate', state.startDate)) || state.startDate;
+    state.birthdayDate = (await window.memoryDB.getSetting('bdayDate', state.birthdayDate)) || state.birthdayDate;
+    state.customTracks = (await window.memoryDB.getSetting('playlist', [])) || [];
+
+    window.romanticAudio.setPlaylist(state.customTracks);
+    renderPlaylistUI();
+    updateProfileDisplays();
+    initTogetherCounter();
+    initBirthdayCountdown();
+
+    await seedInitialMemories();
+    await refreshMemories();
+    renderCalendar();
+  } catch (err) {
+    console.warn('Database initialization warning:', err);
+    await refreshMemories();
+    renderCalendar();
+  }
 
   // --- Profile & Names Update ---
   function updateProfileDisplays() {
@@ -251,22 +274,215 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(updateBday, 60000);
   }
 
-  // --- Music Player Controller ---
-  function initMusicPlayer() {
-    const toggleBtn = document.getElementById('music-toggle-btn');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        window.romanticAudio.toggle();
+  // --- Advanced Floating Music Player & Playlist Controller (Bottom-Left) ---
+  async function initMusicPlayer() {
+    const musicFabBtn = document.getElementById('music-fab-btn');
+    const floatingPlaylistCard = document.getElementById('floating-playlist-card');
+    const closePlaylistBtn = document.getElementById('close-floating-playlist');
+    const playPauseBtn = document.getElementById('music-play-pause-btn');
+    const quickAddBtn = document.getElementById('playlist-add-quick-btn');
+
+    // Initialize playlist in audio player
+    window.romanticAudio.setPlaylist(state.customTracks);
+
+    // Render Playlist UI in dropdown and settings
+    renderPlaylistUI();
+
+    // Global function for instant toggle
+    window.togglePlaylistCard = function(e) {
+      if (e) e.stopPropagation();
+      const card = document.getElementById('floating-playlist-card');
+      if (card) {
+        card.classList.toggle('active');
+      }
+    };
+
+    // Toggle Floating Playlist Drawer on Click FAB
+    if (musicFabBtn && floatingPlaylistCard) {
+      musicFabBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.togglePlaylistCard(e);
       });
     }
 
-    const customAudioInput = document.getElementById('custom-audio-input');
-    if (customAudioInput) {
-      customAudioInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          window.romanticAudio.loadCustomFile(file);
+    // Close Playlist Drawer
+    if (closePlaylistBtn && floatingPlaylistCard) {
+      closePlaylistBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        floatingPlaylistCard.classList.remove('active');
+      });
+    }
+
+    // Play/Pause button inside the playlist card header
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.romanticAudio.toggle();
+        renderPlaylistUI();
+      });
+    }
+
+    // Quick add button in playlist popup
+    if (quickAddBtn) {
+      quickAddBtn.addEventListener('click', () => {
+        if (floatingPlaylistCard) {
+          floatingPlaylistCard.classList.remove('active');
         }
+        const settingsModal = document.getElementById('settings-modal');
+        if (settingsModal) {
+          updateProfileDisplays();
+          settingsModal.classList.add('active');
+        }
+      });
+    }
+
+    // Close playlist drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (floatingPlaylistCard && floatingPlaylistCard.classList.contains('active')) {
+        if (!floatingPlaylistCard.contains(e.target) && !musicFabBtn.contains(e.target)) {
+          floatingPlaylistCard.classList.remove('active');
+        }
+      }
+    });
+
+    // Handle Adding New Song in Settings Modal
+    const addSongBtn = document.getElementById('add-song-to-playlist-btn');
+    const songTitleInput = document.getElementById('new-song-title');
+    const songFileInput = document.getElementById('new-song-file');
+    const uploadMusicIndicator = document.getElementById('upload-music-indicator');
+
+    if (addSongBtn && songFileInput) {
+      addSongBtn.addEventListener('click', async () => {
+        const file = songFileInput.files[0];
+        if (!file) {
+          alert('Silakan pilih file musik (MP3) terlebih dahulu!');
+          return;
+        }
+
+        const songTitle = (songTitleInput ? songTitleInput.value.trim() : '') || file.name.replace(/\.[^/.]+$/, '');
+        
+        if (uploadMusicIndicator) {
+          uploadMusicIndicator.style.display = 'block';
+          uploadMusicIndicator.textContent = window.memoryDB.isCloudEnabled ? '⏳ Mengunggah lagu ke Cloud Storage...' : '⏳ Menyimpan lagu...';
+        }
+        addSongBtn.disabled = true;
+
+        try {
+          let songUrl = null;
+          if (window.memoryDB.isCloudEnabled) {
+            songUrl = await window.memoryDB.uploadFileToStorage(file);
+          }
+          
+          if (!songUrl) {
+            songUrl = URL.createObjectURL(file);
+          }
+
+          const newTrack = {
+            id: Date.now().toString(),
+            title: songTitle,
+            artist: state.myName || 'Kita Berdua',
+            url: songUrl
+          };
+
+          state.customTracks.push(newTrack);
+          await window.memoryDB.setSetting('playlist', state.customTracks);
+          
+          window.romanticAudio.setPlaylist(state.customTracks);
+          renderPlaylistUI();
+
+          // Reset inputs
+          if (songTitleInput) songTitleInput.value = '';
+          songFileInput.value = '';
+
+          window.confetti.burst({ count: 30 });
+        } catch (err) {
+          console.error('Error adding song to playlist:', err);
+          alert('Gagal menambahkan lagu: ' + err.message);
+        } finally {
+          if (uploadMusicIndicator) uploadMusicIndicator.style.display = 'none';
+          addSongBtn.disabled = false;
+        }
+      });
+    }
+  }
+
+  // Render Playlist UI in both dropdown and settings modal
+  function renderPlaylistUI() {
+    const dropdownList = document.getElementById('playlist-items-list');
+    const settingsList = document.getElementById('settings-playlist-list');
+    const countBadge = document.getElementById('playlist-count-badge');
+    const countLabel = document.getElementById('playlist-count-label');
+
+    const allTracks = window.romanticAudio.playlist || [];
+
+    if (countBadge) {
+      countBadge.textContent = `${allTracks.length} Lagu`;
+    }
+    if (countLabel) {
+      countLabel.textContent = `${allTracks.length} Lagu`;
+    }
+
+    // 1. Render in Dropdown Popup
+    if (dropdownList) {
+      dropdownList.innerHTML = '';
+      allTracks.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = 'playlist-item' + (index === window.romanticAudio.currentIndex ? ' active' : '');
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+            <span style="font-size: 1rem;">${track.isDefault ? '🎹' : '🎵'}</span>
+            <div class="playlist-item-title" title="${escapeHtml(track.title)}">${escapeHtml(track.title)}</div>
+          </div>
+          <span class="playlist-item-status">${index === window.romanticAudio.currentIndex ? '▶️' : ''}</span>
+        `;
+
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.romanticAudio.selectTrack(index);
+          if (!window.romanticAudio.isPlaying) {
+            window.romanticAudio.toggle();
+          }
+          renderPlaylistUI();
+        });
+
+        dropdownList.appendChild(item);
+      });
+    }
+
+    // 2. Render in Settings Modal List
+    if (settingsList) {
+      settingsList.innerHTML = '';
+      allTracks.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: white; border: 1px solid #f1f3f5; border-radius: 6px; font-size: 0.82rem;';
+        
+        item.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
+            <span>${track.isDefault ? '🎹' : '🎵'}</span>
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; font-weight: 500;">
+              ${escapeHtml(track.title)}
+            </span>
+          </div>
+          <div>
+            ${track.isDefault ? '<span style="font-size: 0.72rem; color: #adb5bd;">(Bawaan)</span>' : `<button type="button" class="btn-icon" data-delete-track="${track.id}" title="Hapus Lagu" style="width: 26px; height: 26px; font-size: 0.75rem; color: #e63946;">🗑️</button>`}
+          </div>
+        `;
+
+        // Handle delete track button
+        const delBtn = item.querySelector(`[data-delete-track="${track.id}"]`);
+        if (delBtn) {
+          delBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`Hapus lagu "${track.title}" dari playlist?`)) {
+              state.customTracks = state.customTracks.filter(t => t.id !== track.id);
+              await window.memoryDB.setSetting('playlist', state.customTracks);
+              window.romanticAudio.setPlaylist(state.customTracks);
+              renderPlaylistUI();
+            }
+          });
+        }
+
+        settingsList.appendChild(item);
       });
     }
   }

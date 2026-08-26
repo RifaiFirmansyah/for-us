@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Love Vault & Memories ✨</title>
   <meta name="description" content="Website kenangan cinta, galeri foto & video, kalender memori, dan perayaan ulang tahun spesial.">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2.0">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
 </head>
 <body>
@@ -22,15 +22,6 @@
       </a>
 
       <div class="nav-actions">
-        <!-- Floating BGM Player -->
-        <div class="music-badge" id="music-toggle-btn" title="Putar Musik Romantis">
-          <div class="vinyl-disc" id="music-vinyl"></div>
-          <div class="sound-waves" id="sound-waves">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <span id="music-play-icon" style="font-size: 0.9rem;">🎵</span>
-        </div>
-
         <!-- Settings Button -->
         <button class="btn-icon" id="settings-btn" title="Pengaturan Pasangan & Tanggal" aria-label="Pengaturan">
           ⚙️
@@ -198,7 +189,58 @@
     </div>
   </main>
 
-  <!-- Floating Action Button for Quick Upload -->
+  <!-- Floating Button Kiri Bawah (Hanya Icon Playlist) -->
+  <button class="music-floating-btn" id="music-fab-btn" title="Buka Daftar Lagu (Playlist)" aria-label="Playlist Musik" onclick="togglePlaylistCard(event);">
+    <span class="fab-music-icon" id="fab-music-icon">🎵</span>
+  </button>
+
+  <!-- Card Popup Playlist (Muncul saat tombol icon di klik) -->
+  <div class="floating-playlist-card" id="floating-playlist-card">
+    <div class="playlist-card-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.25rem;">🎼</span>
+        <div>
+          <h4 style="font-family: var(--font-serif); color: var(--deep-wine); font-size: 1.05rem; margin: 0;">Playlist Kita</h4>
+          <span id="playlist-count-label" style="font-size: 0.75rem; color: var(--primary-pink); font-weight: 600;">1 Lagu</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <button class="btn-icon" id="music-play-pause-btn" title="Putar / Jeda" style="width: 32px; height: 32px; font-size: 0.85rem;">
+          <span id="music-play-icon">▶️</span>
+        </button>
+        <button class="modal-close" id="close-floating-playlist" onclick="togglePlaylistCard(event);" style="position: static; width: 28px; height: 28px; font-size: 0.85rem;">&times;</button>
+      </div>
+    </div>
+
+    <!-- Banner Lagu yang Sedang Diputar -->
+    <div class="now-playing-banner" id="now-playing-banner">
+      <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">Sedang Diputar:</div>
+      <div class="now-playing-title" id="music-current-title">Melodi Piano Romantis (Default)</div>
+    </div>
+
+    <!-- List Lagu yang Sudah Diinput -->
+    <div class="playlist-tracks-scroll" id="playlist-items-list">
+      <!-- Rendered by JS -->
+    </div>
+
+    <!-- Tombol Kelola / Tambah Lagu -->
+    <button class="playlist-add-quick-btn" id="playlist-add-quick-btn">
+      <span>+</span> Kelola / Tambah Lagu Baru
+    </button>
+  </div>
+
+  <script>
+    // Synchronous Playlist Card Toggle - Works Immediately without waiting for network/database
+    function togglePlaylistCard(e) {
+      if (e) e.stopPropagation();
+      var card = document.getElementById('floating-playlist-card');
+      if (card) {
+        card.classList.toggle('active');
+      }
+    }
+  </script>
+
+  <!-- Floating Action Button for Quick Upload (Bottom Right) -->
   <button class="fab-btn" id="fab-upload-btn" title="Tambah Memori Baru">
     <span style="font-size: 1.3rem;">+</span>
     <span>Tambah Memori</span>
@@ -313,10 +355,30 @@
           <input type="date" class="form-input" id="setting-bday-date" required>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Upload Lagu Romantis Sendiri (Opsional - MP3)</label>
-          <input type="file" id="custom-audio-input" accept="audio/*" class="form-input">
-          <small style="color: var(--text-muted); display: block; margin-top: 4px;">Jika tidak diupload, website akan memainkan nada piano romantis otomatis 🎵</small>
+        <!-- Playlist Manager Section (Multi-Lagu) -->
+        <div style="background: #fffdf5; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); padding: 16px; margin: 16px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: var(--deep-wine); font-size: 0.95rem;">🎼 Kelola Playlist Lagu (Multi-Lagu)</strong>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="playlist-count-badge">1 Lagu</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+            Kamu bisa menambahkan beberapa lagu MP3 sekaligus agar kamu &amp; pacarmu bisa memilih lagu yang ingin diputar.
+          </p>
+
+          <!-- Current Song List -->
+          <div id="settings-playlist-list" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; max-height: 160px; overflow-y: auto;">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Add New Song Box -->
+          <div style="display: flex; gap: 8px; flex-direction: column; background: white; padding: 12px; border-radius: 8px; border: 1px dashed #ffd8a8;">
+            <input type="text" class="form-input" id="new-song-title" placeholder="Judul Lagu (Contoh: Perfect - Ed Sheeran)" style="font-size: 0.85rem; padding: 8px 12px;">
+            <input type="file" id="new-song-file" accept="audio/*" class="form-input" style="font-size: 0.82rem; padding: 6px 10px;">
+            <button type="button" class="btn-primary" id="add-song-to-playlist-btn" style="padding: 8px 16px; font-size: 0.85rem; justify-content: center;">
+              <span>+</span> Upload &amp; Tambah Lagu ke Playlist
+            </button>
+            <div id="upload-music-indicator" style="display: none; font-size: 0.75rem; color: var(--primary-pink); text-align: center; font-weight: 600;">⏳ Mengunggah lagu ke Cloud Storage...</div>
+          </div>
         </div>
 
         <!-- Supabase Cloud Connection Section -->
@@ -467,9 +529,9 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/db.js"></script>
-  <script src="js/confetti.js"></script>
-  <script src="js/audio.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/db.js?v=2.5"></script>
+  <script src="js/confetti.js?v=2.5"></script>
+  <script src="js/audio.js?v=2.5"></script>
+  <script src="js/app.js?v=2.5"></script>
 </body>
 </html>
