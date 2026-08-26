@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Love Vault & Memories ✨</title>
+  <meta name="description" content="Website kenangan cinta, galeri foto & video, kalender memori, dan perayaan ulang tahun spesial.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+</head>
+<body>
+
+  <!-- Canvas Background for Floating Hearts / Stars -->
+  <canvas id="particles-bg"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="navbar container">
+    <nav class="nav-glass">
+      <a href="#" class="brand-logo" id="brand-logo">
+        <span class="heart-beat">💖</span>
+        <span id="nav-brand-text">Our Love Story</span>
+      </a>
+
+      <div class="nav-actions">
+        <!-- Floating BGM Player -->
+        <div class="music-badge" id="music-toggle-btn" title="Putar Musik Romantis">
+          <div class="vinyl-disc" id="music-vinyl"></div>
+          <div class="sound-waves" id="sound-waves">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <span id="music-play-icon" style="font-size: 0.9rem;">🎵</span>
+        </div>
+
+        <!-- Settings Button -->
+        <button class="btn-icon" id="settings-btn" title="Pengaturan Pasangan & Tanggal" aria-label="Pengaturan">
+          ⚙️
+        </button>
+
+        <!-- Add Memory Button -->
+        <button class="btn-primary" id="add-memory-nav-btn">
+          <span>+</span> Upload Memori
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="couple-names-wrap">
+        <h1 class="couple-title" id="display-couple-names">Rama &amp; Sasa</h1>
+      </div>
+      <p class="hero-subtitle">Setiap detik bersamamu adalah memori terindah ✨</p>
+
+      <!-- Live Days Together Counter -->
+      <div class="together-card">
+        <div class="together-label">
+          <span>⏳</span> Kita Telah Bersama Selama
+        </div>
+        <div class="counter-grid">
+          <div class="counter-item">
+            <div class="counter-val" id="cnt-days">0</div>
+            <div class="counter-unit">Hari</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-val" id="cnt-hours">0</div>
+            <div class="counter-unit">Jam</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-val" id="cnt-mins">0</div>
+            <div class="counter-unit">Menit</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-val" id="cnt-secs">0</div>
+            <div class="counter-unit">Detik</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Birthday Event Special Banner Widget -->
+      <div class="birthday-banner" id="birthday-banner-box">
+        <div class="bday-info">
+          <div class="bday-icon-box">🎂</div>
+          <div class="bday-text">
+            <h3 id="bday-banner-title">Hitung Mundur Ulang Tahun Pacar Tercinta 🎉</h3>
+            <p id="bday-banner-subtitle">Menghitung hari menuju hari kelahiran bidadariku!</p>
+          </div>
+        </div>
+        <button class="bday-countdown-badge" id="open-birthday-modal-btn">
+          <span id="bday-countdown-text">🎁 14 Hari Lagi</span>
+          <span>&rarr;</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Main Content Grid (Gallery + Sidebar) -->
+    <div class="main-content-grid">
+      
+      <!-- Left Column: Memory Gallery (Photo & Video stream) -->
+      <section class="gallery-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📸 Galeri Memori</h2>
+            <p class="section-subtitle">Kumpulan foto, video & kenangan manis berdua</p>
+          </div>
+          <div class="section-tabs">
+            <button class="tab-btn active" data-filter="all">Semua</button>
+            <button class="tab-btn" data-filter="photo">Foto 📸</button>
+            <button class="tab-btn" data-filter="video">Video 🎥</button>
+            <button class="tab-btn" data-filter="favorite">Favorit ⭐</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Grid of Memory Cards -->
+        <div class="memory-grid" id="memory-grid-container">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </section>
+
+      <!-- Right Column: Sidebar (Mini Calendar & Open When Letters) -->
+      <aside class="sidebar-panel">
+        
+        <!-- Interactive Mini Calendar -->
+        <div class="calendar-card">
+          <div class="cal-header">
+            <h3 class="cal-month-title" id="cal-month-year">Bulan 2026</h3>
+            <div style="display: flex; gap: 6px;">
+              <button class="cal-nav-btn" id="cal-prev-btn" aria-label="Bulan Sebelumnya">&lt;</button>
+              <button class="cal-nav-btn" id="cal-next-btn" aria-label="Bulan Berikutnya">&gt;</button>
+            </div>
+          </div>
+          <div class="cal-weekdays">
+            <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+          </div>
+          <div class="cal-days-grid" id="cal-days-container">
+            <!-- Rendered by JS -->
+          </div>
+          <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+            <span>❤️ = Ada memori di tanggal ini</span>
+          </div>
+        </div>
+
+        <!-- "Open When..." Virtual Envelopes -->
+        <div class="envelopes-card">
+          <h3 class="cal-month-title">💌 Surat "Buka Saat..."</h3>
+          <p class="section-subtitle" style="margin-bottom: 8px;">Pesan rahasia spesial untuk kamu baca</p>
+          
+          <div class="envelope-list">
+            <div class="envelope-item" data-letter-id="1">
+              <div class="envelope-info">
+                <span class="envelope-icon">🥺</span>
+                <div>
+                  <div class="envelope-title">Buka saat kamu lagi kangen</div>
+                  <div class="envelope-tag">Love Letter #1</div>
+                </div>
+              </div>
+              <span>✉️</span>
+            </div>
+
+            <div class="envelope-item" data-letter-id="2">
+              <div class="envelope-info">
+                <span class="envelope-icon">🌧️</span>
+                <div>
+                  <div class="envelope-title">Buka saat lagi bad mood / capek</div>
+                  <div class="envelope-tag">Semangat Sayang!</div>
+                </div>
+              </div>
+              <span>✉️</span>
+            </div>
+
+            <div class="envelope-item" data-letter-id="3">
+              <div class="envelope-info">
+                <span class="envelope-icon">✨</span>
+                <div>
+                  <div class="envelope-title">Buka saat kamu merasa insecure</div>
+                  <div class="envelope-tag">You are Beautiful</div>
+                </div>
+              </div>
+              <span>✉️</span>
+            </div>
+
+            <div class="envelope-item" data-letter-id="4">
+              <div class="envelope-info">
+                <span class="envelope-icon">🎂</span>
+                <div>
+                  <div class="envelope-title">Buka tepat di hari ulang tahunmu</div>
+                  <div class="envelope-tag">Birthday Special Letter</div>
+                </div>
+              </div>
+              <span>✉️</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- Floating Action Button for Quick Upload -->
+  <button class="fab-btn" id="fab-upload-btn" title="Tambah Memori Baru">
+    <span style="font-size: 1.3rem;">+</span>
+    <span>Tambah Memori</span>
+  </button>
+
+  <!-- MODALS -->
+
+  <!-- 1. Modal Upload Memory -->
+  <div class="modal-overlay" id="upload-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="close-upload-modal">&times;</button>
+      <h2 class="modal-title"><span>💖</span> Tambah Memori Baru</h2>
+
+      <form id="memory-form">
+        <div class="form-group">
+          <label class="form-label">Pilih Foto atau Video</label>
+          <div class="file-dropzone" id="file-dropzone">
+            <input type="file" id="media-file-input" accept="image/*,video/*" style="display: none;">
+            <div id="dropzone-placeholder">
+              <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📸 / 🎥</span>
+              <strong>Klik untuk memilih file</strong> atau seret ke sini
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Mendukung foto (JPG, PNG) dan video (MP4, WEBM)</p>
+            </div>
+            <div class="file-preview" id="file-preview-box"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="memory-title-input">Judul Momen</label>
+          <input type="text" class="form-input" id="memory-title-input" placeholder="Contoh: Kencan Pertama di Cafe Vintage" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="memory-date-input">Tanggal Momen Terjadi</label>
+            <input type="date" class="form-input" id="memory-date-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="memory-tag-select">Kategori / Mood</label>
+            <select class="form-select" id="memory-tag-select">
+              <option value="favorite">⭐ Momen Favorit</option>
+              <option value="date">☕ Kencan Manis</option>
+              <option value="trip">✈️ Jalan-Jalan & Liburan</option>
+              <option value="funny">😂 Momen Random & Lucu</option>
+              <option value="bday">🎂 Momen Ulang Tahun</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="memory-note-input">Catatan Kenangan (Love Note)</label>
+          <textarea class="form-textarea" id="memory-note-input" rows="3" placeholder="Tulis cerita manis di balik foto/video ini..."></textarea>
+        </div>
+
+        <div id="upload-status-indicator" style="display: none; text-align: center; color: var(--primary-pink); font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;">
+          ⏳ Sedang mengunggah file ke Cloud Storage, mohon tunggu...
+        </div>
+
+        <button type="submit" id="save-memory-submit-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1.05rem;">
+          Simpan ke Love Vault ✨
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Modal View Memory Details -->
+  <div class="modal-overlay" id="view-memory-modal">
+    <div class="modal-box" style="max-width: 680px;">
+      <button class="modal-close" id="close-view-modal">&times;</button>
+      <div id="view-media-container" style="border-radius: 12px; overflow: hidden; max-height: 420px; background: #000; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <!-- Media inserted here -->
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="media-tag-badge" id="view-memory-tag" style="position: static;">Tag</span>
+        <span style="font-size: 0.85rem; color: var(--primary-pink); font-weight: 600;" id="view-memory-date">Tanggal</span>
+      </div>
+      <h2 class="modal-title" id="view-memory-title" style="margin-bottom: 12px;">Judul Memori</h2>
+      <div class="letter-content-box" id="view-memory-note" style="font-size: 1.15rem; margin-top: 10px;">
+        Catatan kenangan...
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+        <button class="btn-icon" id="delete-memory-btn" title="Hapus Memori Ini" style="color: #e63946;">🗑️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal Settings (Custom Couple Names & Dates) -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="close-settings-modal">&times;</button>
+      <h2 class="modal-title">⚙️ Personalisasi Website</h2>
+
+      <form id="settings-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="setting-my-name">Nama Kamu</label>
+            <input type="text" class="form-input" id="setting-my-name" value="Rama" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="setting-her-name">Nama Pacar</label>
+            <input type="text" class="form-input" id="setting-her-name" value="Sasa" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="setting-start-date">Tanggal Jadian / Mulai Bersama</label>
+          <input type="date" class="form-input" id="setting-start-date" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="setting-bday-date">Tanggal Ulang Tahun Pacar</label>
+          <input type="date" class="form-input" id="setting-bday-date" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload Lagu Romantis Sendiri (Opsional - MP3)</label>
+          <input type="file" id="custom-audio-input" accept="audio/*" class="form-input">
+          <small style="color: var(--text-muted); display: block; margin-top: 4px;">Jika tidak diupload, website akan memainkan nada piano romantis otomatis 🎵</small>
+        </div>
+
+        <!-- Supabase Cloud Connection Section -->
+        <div style="background: #fff8f9; border: 1px solid #ffccd5; border-radius: var(--radius-sm); padding: 16px; margin: 20px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: var(--deep-wine); font-size: 0.95rem;">☁️ Database Cloud Supabase (Online Sync)</strong>
+            <span id="cloud-status-badge" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; background: #eee; color: #666; font-weight: 600;">⚪ Offline/Lokal</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+            Hubungkan ke Supabase gratis agar foto, video &amp; catatan tersimpan di cloud dan bisa diakses pacar dari HP-nya!
+          </p>
+
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label class="form-label" for="setting-supabase-url" style="font-size: 0.8rem;">Supabase Project URL</label>
+            <input type="url" class="form-input" id="setting-supabase-url" placeholder="https://xyzcompany.supabase.co" style="font-size: 0.85rem; padding: 8px 12px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 6px;">
+            <label class="form-label" for="setting-supabase-key" style="font-size: 0.8rem;">Supabase Anon / Public Key</label>
+            <input type="password" class="form-input" id="setting-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="font-size: 0.85rem; padding: 8px 12px;">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px;">
+          Simpan Pengaturan
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Modal Birthday Celebration (Party, Virtual Cake, Blow Candle & Love Letter) -->
+  <div class="modal-overlay" id="birthday-celebration-modal">
+    <div class="modal-box bday-celebration-box">
+      <button class="modal-close" id="close-birthday-modal">&times;</button>
+      
+      <span style="font-size: 2.8rem;">🎉🎂✨</span>
+      <h2 class="modal-title" style="justify-content: center; font-size: 2.2rem; margin-top: 6px;">
+        Selamat Ulang Tahun, <span id="bday-celebrant-name" style="color: var(--primary-pink);">Sayang</span>!
+      </h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">
+        Hari ini adalah hari paling istimewa karena orang terhebat di dunia dilahirkan! 💖
+      </p>
+
+      <!-- Interactive Virtual Cake with Blowable Candles -->
+      <div class="cake-container" id="virtual-cake-box">
+        <svg class="cake-svg" viewBox="0 0 200 200">
+          <!-- Plate -->
+          <ellipse cx="100" cy="180" rx="90" ry="16" fill="#e9ecef" />
+          <!-- Cake Base Layer -->
+          <path d="M 30 140 Q 100 170 170 140 L 170 160 Q 100 190 30 160 Z" fill="#ffb8c6" />
+          <ellipse cx="100" cy="140" rx="70" ry="20" fill="#ffa4b6" />
+          <!-- Cake Top Layer -->
+          <path d="M 45 100 Q 100 130 155 100 L 155 125 Q 100 155 45 125 Z" fill="#ffccd5" />
+          <ellipse cx="100" cy="100" rx="55" ry="16" fill="#fff0f3" />
+          
+          <!-- Candle 1 (Left) -->
+          <rect x="75" y="60" width="8" height="30" rx="4" fill="#ffd166" />
+          <!-- Candle 2 (Middle) -->
+          <rect x="96" y="52" width="8" height="38" rx="4" fill="#06d6a0" />
+          <!-- Candle 3 (Right) -->
+          <rect x="117" y="60" width="8" height="30" rx="4" fill="#118ab2" />
+
+          <!-- Flame 1 -->
+          <g class="candle-flame" id="flame-1">
+            <ellipse cx="79" cy="50" rx="5" ry="8" fill="#ff9f1c" />
+            <ellipse cx="79" cy="51" rx="2.5" ry="4.5" fill="#fff" />
+          </g>
+          <!-- Flame 2 -->
+          <g class="candle-flame" id="flame-2">
+            <ellipse cx="100" cy="42" rx="6" ry="9" fill="#ff9f1c" />
+            <ellipse cx="100" cy="43" rx="3" ry="5" fill="#fff" />
+          </g>
+          <!-- Flame 3 -->
+          <g class="candle-flame" id="flame-3">
+            <ellipse cx="121" cy="50" rx="5" ry="8" fill="#ff9f1c" />
+            <ellipse cx="121" cy="51" rx="2.5" ry="4.5" fill="#fff" />
+          </g>
+
+          <!-- Smoke effect when blown -->
+          <path class="smoke" d="M 100 45 Q 90 30 100 20 T 100 5" stroke="#adb5bd" stroke-width="2" fill="none" />
+        </svg>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <button class="btn-primary" id="blow-candles-btn" style="margin: 0 auto; font-size: 1.05rem; padding: 12px 28px;">
+          🌬️ Make a Wish &amp; Tiup Lilin!
+        </button>
+      </div>
+
+      <!-- Birthday Love Letter -->
+      <div class="letter-content-box" id="bday-letter-box">
+"Selamat ulang tahun untuk perempuan paling berharga dalam hidupku. Terima kasih sudah hadir, menebarkan senyum terindah, dan mewarnai hari-hariku.
+
+Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi kebahagiaan, dan aku bisa terus ada di sampingmu untuk merayakannya setiap tahun. I love you to the moon and back! 💖🎂"
+      </div>
+
+      <!-- Love Coupons Section -->
+      <h3 style="font-family: var(--font-serif); margin-top: 24px; color: var(--deep-wine);">🎟️ Klaim Kupon Hadiah Cinta</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; text-align: left;">
+        <div class="envelope-item" style="border: 1px solid #ffd166; background: #fffdf5;">
+          <div>
+            <strong>💆‍♀️ Free Pijat & Manja</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Berlaku kapan saja</div>
+          </div>
+          <span>✨</span>
+        </div>
+        <div class="envelope-item" style="border: 1px solid #ff758c; background: #fffdf5;">
+          <div>
+            <strong>🍽️ Dinner Favorit Kamu</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Bebas pilih menu & tempat</div>
+          </div>
+          <span>✨</span>
+        </div>
+        <div class="envelope-item" style="border: 1px solid #06d6a0; background: #fffdf5;">
+          <div>
+            <strong>🍿 Movie Date & Snacks</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Bebas pilih film apapun</div>
+          </div>
+          <span>✨</span>
+        </div>
+        <div class="envelope-item" style="border: 1px solid #118ab2; background: #fffdf5;">
+          <div>
+            <strong>🤗 Peluk & Dengerin Curhat</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Tanpa interupsi & batas waktu</div>
+          </div>
+          <span>✨</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Modal "Open When..." Virtual Letter View -->
+  <div class="modal-overlay" id="letter-modal">
+    <div class="modal-box" style="max-width: 580px;">
+      <button class="modal-close" id="close-letter-modal">&times;</button>
+      <div style="text-align: center; margin-bottom: 12px;">
+        <span style="font-size: 2.2rem;" id="letter-modal-icon">💌</span>
+        <h2 class="modal-title" id="letter-modal-title" style="justify-content: center; margin-top: 4px;">Surat Cinta</h2>
+      </div>
+      <div class="letter-content-box" id="letter-modal-content">
+        <!-- Filled by JS -->
+      </div>
+      <div style="text-align: right; font-family: var(--font-hand); font-size: 1.6rem; color: var(--primary-pink);" id="letter-modal-sender">
+        With all my love ❤️
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/db.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
