@@ -80,6 +80,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   initUploadForm();
   initOpenWhenLetters();
   initBirthdayCelebration();
+
+  // Expose as globals so they can always be called from outside
+  window.renderCalendar = () => renderCalendar();
+  window.renderGallery = () => renderGallery();
+
+  // Render calendar and gallery immediately with current state
   renderCalendar();
   renderGallery();
 

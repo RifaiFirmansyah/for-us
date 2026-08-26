@@ -568,9 +568,25 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/db.js?v=4.0"></script>
-  <script src="js/confetti.js?v=4.0"></script>
-  <script src="js/audio.js?v=4.0"></script>
-  <script src="js/app.js?v=4.0"></script>
+  <script src="js/db.js?v=4.1"></script>
+  <script src="js/confetti.js?v=4.1"></script>
+  <script src="js/audio.js?v=4.1"></script>
+  <script src="js/app.js?v=4.1"></script>
+
+  <script>
+    // Safety net: ensure calendar & gallery are always rendered
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var calGrid = document.getElementById('cal-days-container');
+        var memGrid = document.getElementById('memory-grid-container');
+        if (calGrid && calGrid.children.length === 0 && typeof window.renderCalendar === 'function') {
+          window.renderCalendar();
+        }
+        if (memGrid && memGrid.children.length === 0 && typeof window.renderGallery === 'function') {
+          window.renderGallery();
+        }
+      }, 600);
+    });
+  </script>
 </body>
 </html>
