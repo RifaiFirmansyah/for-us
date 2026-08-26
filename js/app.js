@@ -8,8 +8,20 @@ const COUPLE_CONFIG = {
   myName: 'Rifai Ganteng',            // Nama kamu
   herName: 'Anggunly',             // Nama pacar
   startDate: '2026-01-10',     // Tanggal jadian (Format: TTTT-BB-HH)
-  birthdayDate: '2006-08-27'   // Tanggal ulang tahun pacar (Format: TTTT-BB-HH)
+  birthdayDate: '2006-08-27',   // Tanggal ulang tahun pacar (Format: TTTT-BB-HH)
+  herPasscode: '1001',          // Sandi untuk Anggunly (1001 / 10012026 / anggun)
+  adminPasscode: 'rifai123'     // Sandi untuk Rifai Admin (rifai123 / rifai)
 };
+
+// 🎟️ Love Coupons List
+const AVAILABLE_COUPONS = [
+  { id: 'c1', title: 'Free Pijat & Manja', desc: 'Berlaku kapan saja saat kamu capek', icon: '💆‍♀️' },
+  { id: 'c2', title: 'Dinner Romantis Favorit Kamu', desc: 'Bebas pilih menu & tempat makan favorit', icon: '🍽️' },
+  { id: 'c3', title: 'Movie Date & Popcorn', desc: 'Bebas pilih film apapun yang ingin ditonton bareng', icon: '🍿' },
+  { id: 'c4', title: 'Peluk & Dengerin Curhat Sepuasnya', desc: 'Tanpa interupsi & batas waktu untukmu', icon: '🤗' },
+  { id: 'c5', title: 'Ice Cream & Sweet Treats', desc: 'Bebas jajan es krim & dessert manis sepuasnya', icon: '🍦' },
+  { id: 'c6', title: 'Wishlist Shopping Day', desc: 'Wujudkan 1 keinginan belanja spesial dari Rifai', icon: '🛍️' }
+];
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Synchronous Application State (Initialized from COUPLE_CONFIG)
@@ -493,43 +505,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         dropdownList.appendChild(item);
-      });
-    }
-
-    // 2. Render in Settings Modal List
-    if (settingsList) {
-      settingsList.innerHTML = '';
-      allTracks.forEach((track, index) => {
-        const item = document.createElement('div');
-        item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: white; border: 1px solid #f1f3f5; border-radius: 6px; font-size: 0.82rem;';
-
-        item.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
-            <span>${track.isDefault ? '🎹' : '🎵'}</span>
-            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; font-weight: 500;">
-              ${escapeHtml(track.title)}
-            </span>
-          </div>
-          <div>
-            ${track.isDefault ? '<span style="font-size: 0.72rem; color: #adb5bd;">(Bawaan)</span>' : `<button type="button" class="btn-icon" data-delete-track="${track.id}" title="Hapus Lagu" style="width: 26px; height: 26px; font-size: 0.75rem; color: #e63946;">🗑️</button>`}
-          </div>
-        `;
-
-        // Handle delete track button
-        const delBtn = item.querySelector(`[data-delete-track="${track.id}"]`);
-        if (delBtn) {
-          delBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            if (confirm(`Hapus lagu "${track.title}" dari playlist?`)) {
-              state.customTracks = state.customTracks.filter(t => t.id !== track.id);
-              await window.memoryDB.setSetting('playlist', state.customTracks);
-              window.romanticAudio.setPlaylist(state.customTracks);
-              renderPlaylistUI();
-            }
-          });
-        }
-
-        settingsList.appendChild(item);
       });
     }
   }
@@ -1259,15 +1234,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // =========================================================
   // 🎟️ LOVE COUPONS SYSTEM & ADMIN SYNC 🎟️
   // =========================================================
-  const AVAILABLE_COUPONS = [
-    { id: 'c1', title: 'Free Pijat & Manja', desc: 'Berlaku kapan saja saat kamu capek', icon: '💆‍♀️' },
-    { id: 'c2', title: 'Dinner Romantis Favorit Kamu', desc: 'Bebas pilih menu & tempat makan favorit', icon: '🍽️' },
-    { id: 'c3', title: 'Movie Date & Popcorn', desc: 'Bebas pilih film apapun yang ingin ditonton bareng', icon: '🍿' },
-    { id: 'c4', title: 'Peluk & Dengerin Curhat Sepuasnya', desc: 'Tanpa interupsi & batas waktu untukmu', icon: '🤗' },
-    { id: 'c5', title: 'Ice Cream & Sweet Treats', desc: 'Bebas jajan es krim & dessert manis sepuasnya', icon: '🍦' },
-    { id: 'c6', title: 'Wishlist Shopping Day', desc: 'Wujudkan 1 keinginan belanja spesial dari Rifai', icon: '🛍️' }
-  ];
-
   function initCouponsSystem() {
     renderCouponsGrid();
     initAdminCouponsModal();
