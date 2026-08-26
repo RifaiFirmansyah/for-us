@@ -15,12 +15,10 @@ const COUPLE_CONFIG = {
 
 // 🎟️ Love Coupons List
 const AVAILABLE_COUPONS = [
-  { id: 'c1', title: 'Free Pijat & Manja', desc: 'Berlaku kapan saja saat kamu capek', icon: '💆‍♀️' },
-  { id: 'c2', title: 'Dinner Romantis Favorit Kamu', desc: 'Bebas pilih menu & tempat makan favorit', icon: '🍽️' },
-  { id: 'c3', title: 'Movie Date & Popcorn', desc: 'Bebas pilih film apapun yang ingin ditonton bareng', icon: '🍿' },
-  { id: 'c4', title: 'Peluk & Dengerin Curhat Sepuasnya', desc: 'Tanpa interupsi & batas waktu untukmu', icon: '🤗' },
-  { id: 'c5', title: 'Ice Cream & Sweet Treats', desc: 'Bebas jajan es krim & dessert manis sepuasnya', icon: '🍦' },
-  { id: 'c6', title: 'Wishlist Shopping Day', desc: 'Wujudkan 1 keinginan belanja spesial dari Rifai', icon: '🛍️' }
+  { id: 'c1', title: 'Kava space', desc: 'jam kamu yang nentuin, tanggal aku owkkowkow', icon: '💆‍♀️' },
+  { id: 'c2', title: 'Warung Six', desc: 'biar sama dengan aku ultah', icon: '🍽️' },
+  { id: 'c3', title: 'lima best avv', desc: 'tempat first det nichh', icon: '🍿' },
+  { id: 'c4', title: 'atau mau aku aja avvv', desc: 'aku imut loch', icon: '🤗' },
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -303,12 +301,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const bannerBox = document.getElementById('birthday-banner-box');
 
       if (isToday) {
-        if (bannerTitle) bannerTitle.innerHTML = `🎉 HARI INI ULANG TAHUN ${state.herName.toUpperCase()}! 🎂`;
-        if (bannerSubtitle) bannerSubtitle.textContent = 'Klik untuk membuka pesta kejutan & tiup lilin spesial!';
+        if (bannerTitle) bannerTitle.innerHTML = `🎉 SELAMAT ULANGTAHUN SAYANGGG!  🎂`;
+        if (bannerSubtitle) bannerSubtitle.textContent = 'Ayo di klik untukk tiup lilinnsss   🎉 !';
         if (countdownBadgeText) countdownBadgeText.textContent = '🎁 BUKA KEJUTAN SEKARANG!';
         if (bannerBox) bannerBox.style.borderColor = '#ff477e';
       } else if (daysLeft > 0) {
-        if (bannerTitle) bannerTitle.innerHTML = `Hitung Mundur Ulang Tahun ${state.herName} Tercinta 🎉`;
+        if (bannerTitle) bannerTitle.innerHTML = `detik detik sebelum menit  ${state.herName} ultah 🎉`;
         if (bannerSubtitle) bannerSubtitle.textContent = `Menghitung hari menuju perayaan spesial tanggal ${bdayInput.getDate()} ${bdayInput.toLocaleString('id-ID', { month: 'long' })}`;
         if (countdownBadgeText) countdownBadgeText.textContent = `🎁 ${daysLeft} Hari Lagi`;
       }
@@ -1070,22 +1068,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       1: {
         icon: '🥺',
         title: 'Buka Saat Kamu Lagi Kangen...',
-        content: `Hai sayangku,\n\nKalau kamu lagi baca surat ini dan ngerasa kangen, ketahuilah bahwa di sini aku juga selalu mikirin kamu setiap detiknya.\n\nJarak atau kesibukan mungkin kadang bikin kita nggak bisa ketemu langsung, tapi rasa sayangku ke kamu nggak pernah berkurang sedikit pun. Ingat-ingat foto-foto lucu kita di galeri ya, dan kabari aku saat kamu senggang. Peluk hangat buat kamu dari jauh! ❤️`
+        content: `Hai sayangku,\n\nKalau kamu lagi baca surat ini dan ngerasa kangen, aku juga kangen fakkkk, sudah berapa bulan tidak bertemuuuuu, kalau kamu kangen bisa lihat web ini yang isinya ada memory kita berduaaa ❤️`
       },
       2: {
         icon: '🌧️',
         title: 'Buka Saat Lagi Bad Mood atau Capek...',
-        content: `Sayang,\n\nAku tahu hari ini mungkin terasa berat buat kamu. Nggak apa-apa ya kalau mau istirahat, kamu udah berjuang hebat banget hari ini!\n\nJangan dipendam sendirian ya. Nanti kalau kamu udah siap cerita, aku selalu siap mendengarkan semua keluh kesahmu tanpa menghakimi. Tarik napas panjang, minum air hangat, dan ingat ada aku yang selalu bangga sama kamu. Semangat bidadariku! ✨`
+        content: `Sayang,\n\nAku tahu hari ini mungkin terasa berat buat kamu. tetapi ingat selalu kalau kamu punya ripai yang lucu imup menggemaskan ini, datang aja ke ripai, semangaatt cintaaa✨`
       },
       3: {
         icon: '✨',
         title: 'Buka Saat Kamu Merasa Insecure...',
-        content: `Untuk perempuan paling istimewa,\n\nKadang pikiran kita suka jahat dan bikin kita meragukan diri sendiri. Tapi tolong ingat, di mataku kamu adalah sosok yang luar biasa cantik, baik hati, dan penuh kehangatan.\n\nKamu nggak perlu jadi sempurna untuk dicintai. Kamu apa adanya sudah lebih dari cukup untuk membuat hidupku begitu indah. Jangan pernah ragukan betapa berharganya dirimu ya! 💖`
+        content: `Untuk masalah ini, jangan terlalu dipikirkan yaaa, semua manusia diciptakan dengan sempurna, intinyaa kamu sudah berusaha untuk memperbaiki diriii, ituu ajaa dah keren bangett tauukk, aku aja sering insecure juga, tapi aku ga ada usahanya :) 💖`
       },
       4: {
         icon: '🎂',
-        title: 'Buka Tepat di Hari Ulang Tahunmu 🎉',
-        content: `HAPPY BIRTHDAY SAYANGKU! 🎂🎉✨\n\nSelamat bertambah usia untuk orang yang paling aku sayangi di dunia ini. Terima kasih sudah lahir dan membawa begitu banyak kebahagiaan dalam hidupku.\n\nSemoga semua cita-cita dan harapanmu terkabul di usia yang baru ini. Aku berdoa semoga kita bisa terus bersama merayakan ulang tahunmu di tahun-tahun berikutnya. I love you so much! ❤️`
+        title: 'Buka saat ripai kaya hantuww🎉',
+        content: `Disini bagian saya, aku minta maaf yaa kalau selama ini kamu ngerasain kesepian karena aku, aku sibuk sibuk an, jarang kita chattingan jadinya, maaf kan aku yang seperti itu yaa, kadang aku engga bisa kontrol diri kalau sudah diluar atau jumpa teman, aku akan usahain untuk mengabari kamu dan menyisakan waktu untuk kamu avvv sosweet ripai dang ❤️`
       }
     };
 
@@ -1157,10 +1155,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const code = passcodeInput.value.trim().toLowerCase();
-        
+
         const herValidCodes = [
           String(COUPLE_CONFIG.herPasscode).toLowerCase(),
-          '1001', '10012026', '10-01-2026', 'anggun', 'anggunly', '2708', '27082006'
+          '20260110', '10012026', '20261001', 'anggun', 'anggunly', '2708', '27082006'
         ];
 
         const adminValidCodes = [
@@ -1183,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (loginOverlay) loginOverlay.classList.add('unlocked');
           if (errorMsg) errorMsg.style.display = 'none';
           passcodeInput.value = '';
-          
+
           // Sweet romantic fanfare!
           window.confetti.celebrate();
           if (!window.romanticAudio.isPlaying) {
@@ -1250,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const card = document.createElement('div');
       card.className = 'coupon-card' + (isClaimed ? ' claimed' : '');
-      
+
       card.innerHTML = `
         <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
           <span style="font-size: 1.6rem; flex-shrink: 0;">${coupon.icon}</span>
@@ -1280,7 +1278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             state.claimedCoupons.push(newClaim);
             await window.memoryDB.setSetting('claimed_coupons', state.claimedCoupons);
-            
+
             renderCouponsGrid();
             renderAdminCouponsList();
             window.confetti.celebrate();
@@ -1342,9 +1340,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     coupons.forEach(c => {
       const item = document.createElement('div');
       const isCompleted = c.status === 'completed';
-      
+
       item.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: ${isCompleted ? '#f8f9fa' : '#fff0f3'}; border: 1.5px solid ${isCompleted ? '#dee2e6' : '#ffccd5'}; border-radius: 10px; transition: all 0.2s ease;`;
-      
+
       const claimedDate = c.claimedAt ? new Date(c.claimedAt).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
 
       item.innerHTML = `

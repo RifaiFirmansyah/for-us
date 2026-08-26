@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Love Vault & Memories ✨</title>
-  <meta name="description" content="Website kenangan cinta, galeri foto & video, kalender memori, dan perayaan ulang tahun spesial.">
+  <meta name="description"
+    content="Website kenangan cinta, galeri foto & video, kalender memori, dan perayaan ulang tahun spesial.">
   <link rel="stylesheet" href="css/style.css?v=2.0">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
 </head>
+
 <body>
 
   <!-- Romantic Secret Passcode Login Overlay -->
   <div class="romantic-login-overlay" id="romantic-login-overlay">
     <div class="login-glass-card">
       <div class="login-heart-badge">🔐</div>
-      <h2 class="login-title">Secret Love Vault</h2>
+      <h2 class="login-title">Ruang Angri</h2>
       <p class="login-subtitle">
-        Ruang rahasia penuh kenangan cinta kita berdua. Masukkan kode cinta untuk membuka kunci kenangan...
+        AYO DILOGINKAN KAKA
       </p>
 
       <form id="login-passcode-form" class="login-form">
         <div class="passcode-input-wrap">
-          <input type="password" id="love-passcode-input" class="form-input passcode-input" placeholder="Masukkan PIN / Kode Cinta..." autocomplete="off" required>
+          <input type="password" id="love-passcode-input" class="form-input passcode-input" placeholder="Masukkan PIN "
+            autocomplete="off" required>
         </div>
 
         <button type="submit" class="btn-primary login-btn">
@@ -29,12 +34,12 @@
         </button>
 
         <div class="login-hint-text" id="login-hint-text">
-          💡 <em>Petunjuk: Tanggal spesial jadian kita (format: DDMM atau DDMMYYYY) atau PIN rahasia.</em>
+          💡 <em>Clue :Tanggal spesial jadian kita </em>
         </div>
       </form>
 
       <div class="login-error-msg" id="login-error-msg" style="display: none;">
-        ❌ Kode cinta belum tepat sayang, coba ingat-ingat tanggal spesial kita ya! 🥺
+        ❌ masaa salah sihhh, lupa yaa 🥺
       </div>
     </div>
   </div>
@@ -52,14 +57,18 @@
 
       <div class="nav-actions">
         <!-- Admin Coupon Inbox Button (Muncul jika Rifai login sbg Admin) -->
-        <button class="btn-icon" id="admin-coupon-btn" title="Kupon Hadiah dari Anggunly" style="display: none; background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c; font-size: 0.85rem; padding: 6px 14px; border-radius: var(--radius-full); gap: 6px; width: auto; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(255,107,139,0.15);">
+        <button class="btn-icon" id="admin-coupon-btn" title="Kupon Hadiah dari Anggunly"
+          style="display: none; background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c; font-size: 0.85rem; padding: 6px 14px; border-radius: var(--radius-full); gap: 6px; width: auto; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(255,107,139,0.15);">
           <span>🎟️</span> <span id="admin-coupon-count-badge">0 Kupon</span>
         </button>
 
         <!-- User Role Chip & Lock Button -->
-        <div id="user-role-badge" style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: var(--deep-wine); background: rgba(255,255,255,0.85); padding: 5px 12px; border-radius: var(--radius-full); border: 1px solid rgba(255,107,139,0.3); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div id="user-role-badge"
+          style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: var(--deep-wine); background: rgba(255,255,255,0.85); padding: 5px 12px; border-radius: var(--radius-full); border: 1px solid rgba(255,107,139,0.3); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
           <span id="user-role-label">👑 Anggunly</span>
-          <button id="lock-vault-btn" title="Kunci Kembali / Ganti Akun" style="background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0 2px;" aria-label="Kunci Website">🔒</button>
+          <button id="lock-vault-btn" title="Kunci Kembali / Ganti Akun"
+            style="background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0 2px;"
+            aria-label="Kunci Website">🔒</button>
         </div>
 
         <!-- Add Memory Button -->
@@ -72,18 +81,18 @@
 
   <!-- Main Content Container -->
   <main class="container">
-    
+
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="couple-names-wrap">
         <h1 class="couple-title" id="display-couple-names">Rama &amp; Sasa</h1>
       </div>
-      <p class="hero-subtitle">Setiap detik bersamamu adalah memori terindah ✨</p>
+      <p class="hero-subtitle">Sudah sejauh ini perjalanan kita berdua✨</p>
 
       <!-- Live Days Together Counter -->
       <div class="together-card">
         <div class="together-label">
-          <span>⏳</span> Kita Telah Bersama Selama
+          <span>⏳</span> sudah selama
         </div>
         <div class="counter-grid">
           <div class="counter-item">
@@ -110,8 +119,8 @@
         <div class="bday-info">
           <div class="bday-icon-box">🎂</div>
           <div class="bday-text">
-            <h3 id="bday-banner-title">Hitung Mundur Ulang Tahun Pacar Tercinta 🎉</h3>
-            <p id="bday-banner-subtitle">Menghitung hari menuju hari kelahiran bidadariku!</p>
+            <h3 id="bday-banner-title">Detik detik sebelum menit anggun ultah 🎉</h3>
+            <p id="bday-banner-subtitle">Jangan salto yaaa</p>
           </div>
         </div>
         <button class="bday-countdown-badge" id="open-birthday-modal-btn">
@@ -123,7 +132,7 @@
 
     <!-- Main Content Grid (Gallery + Sidebar) -->
     <div class="main-content-grid">
-      
+
       <!-- Left Column: Memory Gallery (Photo & Video stream) -->
       <section class="gallery-section">
         <div class="section-header">
@@ -147,7 +156,7 @@
 
       <!-- Right Column: Sidebar (Mini Calendar & Open When Letters) -->
       <aside class="sidebar-panel">
-        
+
         <!-- Interactive Mini Calendar -->
         <div class="calendar-card">
           <div class="cal-header">
@@ -163,7 +172,8 @@
           <div class="cal-days-grid" id="cal-days-container">
             <!-- Rendered by JS -->
           </div>
-          <div style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+          <div
+            style="margin-top: 14px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
             <span>❤️ = Ada memori di tanggal ini</span>
           </div>
         </div>
@@ -172,7 +182,7 @@
         <div class="envelopes-card">
           <h3 class="cal-month-title">💌 Surat "Buka Saat..."</h3>
           <p class="section-subtitle" style="margin-bottom: 8px;">Pesan rahasia spesial untuk kamu baca</p>
-          
+
           <div class="envelope-list">
             <div class="envelope-item" data-letter-id="1">
               <div class="envelope-info">
@@ -209,10 +219,10 @@
 
             <div class="envelope-item" data-letter-id="4">
               <div class="envelope-info">
-                <span class="envelope-icon">🎂</span>
+                <span class="envelope-icon">👻</span>
                 <div>
-                  <div class="envelope-title">Buka tepat di hari ulang tahunmu</div>
-                  <div class="envelope-tag">Birthday Special Letter</div>
+                  <div class="envelope-title">Buka saat ripai kaya hantuwww</div>
+                  <div class="envelope-tag">HEHEHEHE</div>
                 </div>
               </div>
               <span>✉️</span>
@@ -225,7 +235,8 @@
   </main>
 
   <!-- Floating Button Kiri Bawah (Hanya Icon Playlist) -->
-  <button class="music-floating-btn" id="music-fab-btn" title="Buka Daftar Lagu (Playlist)" aria-label="Playlist Musik" onclick="togglePlaylistCard(event);">
+  <button class="music-floating-btn" id="music-fab-btn" title="Buka Daftar Lagu (Playlist)" aria-label="Playlist Musik"
+    onclick="togglePlaylistCard(event);">
     <span class="fab-music-icon" id="fab-music-icon">🎵</span>
   </button>
 
@@ -235,21 +246,27 @@
       <div style="display: flex; align-items: center; gap: 8px;">
         <span style="font-size: 1.25rem;">🎼</span>
         <div>
-          <h4 style="font-family: var(--font-serif); color: var(--deep-wine); font-size: 1.05rem; margin: 0;">Playlist Kita</h4>
-          <span id="playlist-count-label" style="font-size: 0.75rem; color: var(--primary-pink); font-weight: 600;">1 Lagu</span>
+          <h4 style="font-family: var(--font-serif); color: var(--deep-wine); font-size: 1.05rem; margin: 0;">Playlist
+            Kita</h4>
+          <span id="playlist-count-label" style="font-size: 0.75rem; color: var(--primary-pink); font-weight: 600;">1
+            Lagu</span>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 6px;">
-        <button class="btn-icon" id="music-play-pause-btn" title="Putar / Jeda" style="width: 32px; height: 32px; font-size: 0.85rem;">
+        <button class="btn-icon" id="music-play-pause-btn" title="Putar / Jeda"
+          style="width: 32px; height: 32px; font-size: 0.85rem;">
           <span id="music-play-icon">▶️</span>
         </button>
-        <button class="modal-close" id="close-floating-playlist" onclick="togglePlaylistCard(event);" style="position: static; width: 28px; height: 28px; font-size: 0.85rem;">&times;</button>
+        <button class="modal-close" id="close-floating-playlist" onclick="togglePlaylistCard(event);"
+          style="position: static; width: 28px; height: 28px; font-size: 0.85rem;">&times;</button>
       </div>
     </div>
 
     <!-- Banner Lagu yang Sedang Diputar -->
     <div class="now-playing-banner" id="now-playing-banner">
-      <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">Sedang Diputar:</div>
+      <div
+        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">
+        Sedang Diputar:</div>
       <div class="now-playing-title" id="music-current-title">Melodi Piano Romantis (Default)</div>
     </div>
 
@@ -264,13 +281,19 @@
         <span>+</span> Tambah Lagu Baru
       </button>
 
-      <div id="add-song-collapsible-box" style="display: none; margin-top: 10px; padding: 12px; background: #fff5f7; border: 1px dashed var(--primary-pink); border-radius: var(--radius-sm);">
-        <input type="text" class="form-input" id="new-song-title" placeholder="Judul Lagu (misal: Perfect)" style="font-size: 0.82rem; padding: 6px 10px; margin-bottom: 8px;">
-        <input type="file" id="new-song-file" accept="audio/*" class="form-input" style="font-size: 0.78rem; padding: 4px 8px; margin-bottom: 8px;">
-        <button type="button" class="btn-primary" id="add-song-to-playlist-btn" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 6px 12px;">
+      <div id="add-song-collapsible-box"
+        style="display: none; margin-top: 10px; padding: 12px; background: #fff5f7; border: 1px dashed var(--primary-pink); border-radius: var(--radius-sm);">
+        <input type="text" class="form-input" id="new-song-title" placeholder="Judul Lagu (misal: Perfect)"
+          style="font-size: 0.82rem; padding: 6px 10px; margin-bottom: 8px;">
+        <input type="file" id="new-song-file" accept="audio/*" class="form-input"
+          style="font-size: 0.78rem; padding: 4px 8px; margin-bottom: 8px;">
+        <button type="button" class="btn-primary" id="add-song-to-playlist-btn"
+          style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 6px 12px;">
           <span>⬆️</span> Upload ke Cloud
         </button>
-        <div id="upload-music-indicator" style="display: none; font-size: 0.72rem; color: var(--primary-pink); text-align: center; margin-top: 6px; font-weight: 600;">⏳ Mengunggah ke Supabase...</div>
+        <div id="upload-music-indicator"
+          style="display: none; font-size: 0.72rem; color: var(--primary-pink); text-align: center; margin-top: 6px; font-weight: 600;">
+          ⏳ Mengunggah ke Supabase...</div>
       </div>
     </div>
   </div>
@@ -308,7 +331,8 @@
             <div id="dropzone-placeholder">
               <span style="font-size: 2.2rem; display: block; margin-bottom: 6px;">📸 / 🎥</span>
               <strong>Klik untuk memilih file</strong> atau seret ke sini
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Mendukung foto (JPG, PNG) dan video (MP4, WEBM)</p>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Mendukung foto (JPG, PNG) dan
+                video (MP4, WEBM)</p>
             </div>
             <div class="file-preview" id="file-preview-box"></div>
           </div>
@@ -316,7 +340,8 @@
 
         <div class="form-group">
           <label class="form-label" for="memory-title-input">Judul Momen</label>
-          <input type="text" class="form-input" id="memory-title-input" placeholder="Contoh: Kencan Pertama di Cafe Vintage" required>
+          <input type="text" class="form-input" id="memory-title-input"
+            placeholder="Contoh: Kencan Pertama di Cafe Vintage" required>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
@@ -338,14 +363,17 @@
 
         <div class="form-group">
           <label class="form-label" for="memory-note-input">Catatan Kenangan (Love Note)</label>
-          <textarea class="form-textarea" id="memory-note-input" rows="3" placeholder="Tulis cerita manis di balik foto/video ini..."></textarea>
+          <textarea class="form-textarea" id="memory-note-input" rows="3"
+            placeholder="Tulis cerita manis di balik foto/video ini..."></textarea>
         </div>
 
-        <div id="upload-status-indicator" style="display: none; text-align: center; color: var(--primary-pink); font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;">
+        <div id="upload-status-indicator"
+          style="display: none; text-align: center; color: var(--primary-pink); font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;">
           ⏳ Sedang mengunggah file ke Cloud Storage, mohon tunggu...
         </div>
 
-        <button type="submit" id="save-memory-submit-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1.05rem;">
+        <button type="submit" id="save-memory-submit-btn" class="btn-primary"
+          style="width: 100%; justify-content: center; padding: 14px; font-size: 1.05rem;">
           Simpan ke Love Vault ✨
         </button>
       </form>
@@ -356,12 +384,14 @@
   <div class="modal-overlay" id="view-memory-modal">
     <div class="modal-box" style="max-width: 680px;">
       <button class="modal-close" id="close-view-modal">&times;</button>
-      <div id="view-media-container" style="border-radius: 12px; overflow: hidden; max-height: 420px; background: #000; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+      <div id="view-media-container"
+        style="border-radius: 12px; overflow: hidden; max-height: 420px; background: #000; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
         <!-- Media inserted here -->
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <span class="media-tag-badge" id="view-memory-tag" style="position: static;">Tag</span>
-        <span style="font-size: 0.85rem; color: var(--primary-pink); font-weight: 600;" id="view-memory-date">Tanggal</span>
+        <span style="font-size: 0.85rem; color: var(--primary-pink); font-weight: 600;"
+          id="view-memory-date">Tanggal</span>
       </div>
       <h2 class="modal-title" id="view-memory-title" style="margin-bottom: 12px;">Judul Memori</h2>
       <div class="letter-content-box" id="view-memory-note" style="font-size: 1.15rem; margin-top: 10px;">
@@ -402,49 +432,66 @@
         </div>
 
         <!-- Playlist Manager Section (Multi-Lagu) -->
-        <div style="background: #fffdf5; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); padding: 16px; margin: 16px 0;">
+        <div
+          style="background: #fffdf5; border: 1px solid #ffe8cc; border-radius: var(--radius-sm); padding: 16px; margin: 16px 0;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <strong style="color: var(--deep-wine); font-size: 0.95rem;">🎼 Kelola Playlist Lagu (Multi-Lagu)</strong>
             <span style="font-size: 0.75rem; color: var(--text-muted);" id="playlist-count-badge">1 Lagu</span>
           </div>
           <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-            Kamu bisa menambahkan beberapa lagu MP3 sekaligus agar kamu &amp; pacarmu bisa memilih lagu yang ingin diputar.
+            Kamu bisa menambahkan beberapa lagu MP3 sekaligus agar kamu &amp; pacarmu bisa memilih lagu yang ingin
+            diputar.
           </p>
 
           <!-- Current Song List -->
-          <div id="settings-playlist-list" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; max-height: 160px; overflow-y: auto;">
+          <div id="settings-playlist-list"
+            style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; max-height: 160px; overflow-y: auto;">
             <!-- Rendered by JS -->
           </div>
 
           <!-- Add New Song Box -->
-          <div style="display: flex; gap: 8px; flex-direction: column; background: white; padding: 12px; border-radius: 8px; border: 1px dashed #ffd8a8;">
-            <input type="text" class="form-input" id="new-song-title" placeholder="Judul Lagu (Contoh: Perfect - Ed Sheeran)" style="font-size: 0.85rem; padding: 8px 12px;">
-            <input type="file" id="new-song-file" accept="audio/*" class="form-input" style="font-size: 0.82rem; padding: 6px 10px;">
-            <button type="button" class="btn-primary" id="add-song-to-playlist-btn" style="padding: 8px 16px; font-size: 0.85rem; justify-content: center;">
+          <div
+            style="display: flex; gap: 8px; flex-direction: column; background: white; padding: 12px; border-radius: 8px; border: 1px dashed #ffd8a8;">
+            <input type="text" class="form-input" id="new-song-title"
+              placeholder="Judul Lagu (Contoh: Perfect - Ed Sheeran)" style="font-size: 0.85rem; padding: 8px 12px;">
+            <input type="file" id="new-song-file" accept="audio/*" class="form-input"
+              style="font-size: 0.82rem; padding: 6px 10px;">
+            <button type="button" class="btn-primary" id="add-song-to-playlist-btn"
+              style="padding: 8px 16px; font-size: 0.85rem; justify-content: center;">
               <span>+</span> Upload &amp; Tambah Lagu ke Playlist
             </button>
-            <div id="upload-music-indicator" style="display: none; font-size: 0.75rem; color: var(--primary-pink); text-align: center; font-weight: 600;">⏳ Mengunggah lagu ke Cloud Storage...</div>
+            <div id="upload-music-indicator"
+              style="display: none; font-size: 0.75rem; color: var(--primary-pink); text-align: center; font-weight: 600;">
+              ⏳ Mengunggah lagu ke Cloud Storage...</div>
           </div>
         </div>
 
         <!-- Supabase Cloud Connection Section -->
-        <div style="background: #fff8f9; border: 1px solid #ffccd5; border-radius: var(--radius-sm); padding: 16px; margin: 20px 0;">
+        <div
+          style="background: #fff8f9; border: 1px solid #ffccd5; border-radius: var(--radius-sm); padding: 16px; margin: 20px 0;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <strong style="color: var(--deep-wine); font-size: 0.95rem;">☁️ Database Cloud Supabase (Online Sync)</strong>
-            <span id="cloud-status-badge" style="font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; background: #eee; color: #666; font-weight: 600;">⚪ Offline/Lokal</span>
+            <strong style="color: var(--deep-wine); font-size: 0.95rem;">☁️ Database Cloud Supabase (Online
+              Sync)</strong>
+            <span id="cloud-status-badge"
+              style="font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; background: #eee; color: #666; font-weight: 600;">⚪
+              Offline/Lokal</span>
           </div>
           <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-            Hubungkan ke Supabase gratis agar foto, video &amp; catatan tersimpan di cloud dan bisa diakses pacar dari HP-nya!
+            Hubungkan ke Supabase gratis agar foto, video &amp; catatan tersimpan di cloud dan bisa diakses pacar dari
+            HP-nya!
           </p>
 
           <div class="form-group" style="margin-bottom: 10px;">
             <label class="form-label" for="setting-supabase-url" style="font-size: 0.8rem;">Supabase Project URL</label>
-            <input type="url" class="form-input" id="setting-supabase-url" placeholder="https://xyzcompany.supabase.co" style="font-size: 0.85rem; padding: 8px 12px;">
+            <input type="url" class="form-input" id="setting-supabase-url" placeholder="https://xyzcompany.supabase.co"
+              style="font-size: 0.85rem; padding: 8px 12px;">
           </div>
 
           <div class="form-group" style="margin-bottom: 6px;">
-            <label class="form-label" for="setting-supabase-key" style="font-size: 0.8rem;">Supabase Anon / Public Key</label>
-            <input type="password" class="form-input" id="setting-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="font-size: 0.85rem; padding: 8px 12px;">
+            <label class="form-label" for="setting-supabase-key" style="font-size: 0.8rem;">Supabase Anon / Public
+              Key</label>
+            <input type="password" class="form-input" id="setting-supabase-key"
+              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="font-size: 0.85rem; padding: 8px 12px;">
           </div>
         </div>
 
@@ -459,13 +506,13 @@
   <div class="modal-overlay" id="birthday-celebration-modal">
     <div class="modal-box bday-celebration-box">
       <button class="modal-close" id="close-birthday-modal">&times;</button>
-      
+
       <span style="font-size: 2.8rem;">🎉🎂✨</span>
       <h2 class="modal-title" style="justify-content: center; font-size: 2.2rem; margin-top: 6px;">
-        Selamat Ulang Tahun, <span id="bday-celebrant-name" style="color: var(--primary-pink);">Sayang</span>!
+        Happy birthday, <span id="bday-celebrant-name" style="color: var(--primary-pink);">Sayangg</span>!
       </h2>
       <p style="color: var(--text-muted); font-size: 1.05rem;">
-        Hari ini adalah hari paling istimewa karena orang terhebat di dunia dilahirkan! 💖
+        Hari ini adalah hari paling istimewa karena seorang anggun dilahirkan! 💖
       </p>
 
       <!-- Interactive Virtual Cake with Blowable Candles -->
@@ -479,7 +526,7 @@
           <!-- Cake Top Layer -->
           <path d="M 45 100 Q 100 130 155 100 L 155 125 Q 100 155 45 125 Z" fill="#ffccd5" />
           <ellipse cx="100" cy="100" rx="55" ry="16" fill="#fff0f3" />
-          
+
           <!-- Candle 1 (Left) -->
           <rect x="75" y="60" width="8" height="30" rx="4" fill="#ffd166" />
           <!-- Candle 2 (Middle) -->
@@ -509,25 +556,29 @@
       </div>
 
       <div style="margin-bottom: 20px;">
-        <button class="btn-primary" id="blow-candles-btn" style="margin: 0 auto; font-size: 1.05rem; padding: 12px 28px;">
+        <button class="btn-primary" id="blow-candles-btn"
+          style="margin: 0 auto; font-size: 1.05rem; padding: 12px 28px;">
           🌬️ Make a Wish &amp; Tiup Lilin!
         </button>
       </div>
 
       <!-- Birthday Love Letter -->
       <div class="letter-content-box" id="bday-letter-box">
-"Selamat ulang tahun untuk perempuan paling berharga dalam hidupku. Terima kasih sudah hadir, menebarkan senyum terindah, dan mewarnai hari-hariku.
-
-Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi kebahagiaan, dan aku bisa terus ada di sampingmu untuk merayakannya setiap tahun. I love you to the moon and back! 💖🎂"
+        "Selamat ulang tahunn sayanggggg, tak terasa sudah kamu saja yang ulang tahun lagihh, btw masih tuaan aku,
+        semoga di kamu selalu bahagiaa sampaii kapaan pun, makasihhh sudah memberikan warna baru di hidup aku, dan aku
+        harap aku juga memberikan warna baru di hidup kamu, yaaa semogaa hal hal yang kamu inginkan tercapai,
+        itu aja dari abang, gatau lah abang abang yang lain, lovveeyouuu sayannggg 💖🎂"
       </div>
 
       <!-- Love Coupons Section -->
-      <h3 style="font-family: var(--font-serif); margin-top: 24px; color: var(--deep-wine);">🎟️ Klaim Kupon Hadiah Cinta</h3>
+      <h3 style="font-family: var(--font-serif); margin-top: 24px; color: var(--deep-wine);">🎟️ Silahkan dipilihh
+        kakak, cek out di keranjang kuning</h3>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-        Klik kupon hadiah yang kamu inginkan! Permintaanmu akan langsung terkirim otomatis ke akun Rifai 💌✨
+        nanti akan ripai kabulkan, satu aja yaa hehee 💌✨
       </p>
 
-      <div id="coupons-grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
+      <div id="coupons-grid-container"
+        style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
         <!-- Rendered by JS -->
       </div>
     </div>
@@ -539,12 +590,14 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
       <button class="modal-close" id="close-letter-modal">&times;</button>
       <div style="text-align: center; margin-bottom: 12px;">
         <span style="font-size: 2.2rem;" id="letter-modal-icon">💌</span>
-        <h2 class="modal-title" id="letter-modal-title" style="justify-content: center; margin-top: 4px;">Surat Cinta</h2>
+        <h2 class="modal-title" id="letter-modal-title" style="justify-content: center; margin-top: 4px;">Surat Cinta
+        </h2>
       </div>
       <div class="letter-content-box" id="letter-modal-content">
         <!-- Filled by JS -->
       </div>
-      <div style="text-align: right; font-family: var(--font-hand); font-size: 1.6rem; color: var(--primary-pink);" id="letter-modal-sender">
+      <div style="text-align: right; font-family: var(--font-hand); font-size: 1.6rem; color: var(--primary-pink);"
+        id="letter-modal-sender">
         With all my love ❤️
       </div>
     </div>
@@ -557,10 +610,12 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
       <div style="text-align: center; margin-bottom: 16px;">
         <span style="font-size: 2.5rem;">👑💌</span>
         <h2 class="modal-title" style="justify-content: center; margin-top: 4px;">Kupon Cinta dari Anggunly</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Daftar kupon hadiah yang telah dipilih dan diklaim oleh Anggunly:</p>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Daftar kupon hadiah yang telah dipilih dan diklaim oleh
+          Anggunly:</p>
       </div>
 
-      <div id="admin-coupons-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;">
+      <div id="admin-coupons-list"
+        style="display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;">
         <!-- Filled by JS -->
       </div>
     </div>
@@ -575,8 +630,8 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
 
   <script>
     // Safety net: ensure calendar & gallery are always rendered
-    window.addEventListener('load', function() {
-      setTimeout(function() {
+    window.addEventListener('load', function () {
+      setTimeout(function () {
         var calGrid = document.getElementById('cal-days-container');
         var memGrid = document.getElementById('memory-grid-container');
         if (calGrid && calGrid.children.length === 0 && typeof window.renderCalendar === 'function') {
@@ -589,4 +644,5 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
     });
   </script>
 </body>
+
 </html>
