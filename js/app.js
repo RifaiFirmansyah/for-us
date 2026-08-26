@@ -1,12 +1,23 @@
 // js/app.js - Main Interactive Application Logic
 
+// =========================================================================
+// 💖 PENGATURAN PROFIL PASANGAN KITA 💖
+// Kamu bisa mengubah nama, tanggal jadian, dan ulang tahun langsung di sini:
+// =========================================================================
+const COUPLE_CONFIG = {
+  myName: 'Rifai Ganteng',            // Nama kamu
+  herName: 'Anggunly',             // Nama pacar
+  startDate: '2026-01-10',     // Tanggal jadian (Format: TTTT-BB-HH)
+  birthdayDate: '2006-08-27'   // Tanggal ulang tahun pacar (Format: TTTT-BB-HH)
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Synchronous Application State Defaults
+  // 1. Synchronous Application State (Initialized from COUPLE_CONFIG)
   const state = {
-    myName: 'Rama',
-    herName: 'Sasa',
-    startDate: getPresetStartDate(),
-    birthdayDate: getPresetBdayDate(),
+    myName: COUPLE_CONFIG.myName,
+    herName: COUPLE_CONFIG.herName,
+    startDate: COUPLE_CONFIG.startDate,
+    birthdayDate: COUPLE_CONFIG.birthdayDate,
     currentFilter: 'all',
     selectedCalDate: null,
     calViewDate: new Date(),
@@ -15,7 +26,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     uploadedFileUrl: null,
     uploadedFileType: 'photo',
     activeObjectUrls: [],
-    customTracks: []
+    customTracks: [],
+    currentUserRole: sessionStorage.getItem('mv_auth_role') || null,
+    claimedCoupons: []
   };
 
   // Helper default dates
@@ -58,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Setup ALL UI Elements & Listeners IMMEDIATELY (Zero Milliseconds Latency)
   initBackgroundCanvas();
+  initRomanticLogin();
   updateProfileDisplays();
   initTogetherCounter();
   initBirthdayCountdown();
@@ -66,24 +80,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   initUploadForm();
   initOpenWhenLetters();
   initBirthdayCelebration();
+  renderCalendar();
+  renderGallery();
 
   // 3. Initialize Database & Sync Data in Background
   try {
     await window.memoryDB.init();
 
-    state.myName = (await window.memoryDB.getSetting('myName', state.myName)) || state.myName;
-    state.herName = (await window.memoryDB.getSetting('herName', state.herName)) || state.herName;
-    state.startDate = (await window.memoryDB.getSetting('startDate', state.startDate)) || state.startDate;
-    state.birthdayDate = (await window.memoryDB.getSetting('bdayDate', state.birthdayDate)) || state.birthdayDate;
+    // Prioritize COUPLE_CONFIG defined directly in code
+    state.myName = COUPLE_CONFIG.myName;
+    state.herName = COUPLE_CONFIG.herName;
+    state.startDate = COUPLE_CONFIG.startDate;
+    state.birthdayDate = COUPLE_CONFIG.birthdayDate;
     state.customTracks = (await window.memoryDB.getSetting('playlist', [])) || [];
+    state.claimedCoupons = (await window.memoryDB.getSetting('claimed_coupons', [])) || [];
+
+    // Save active couple config to database
+    await window.memoryDB.setSetting('myName', state.myName);
+    await window.memoryDB.setSetting('herName', state.herName);
+    await window.memoryDB.setSetting('startDate', state.startDate);
+    await window.memoryDB.setSetting('bdayDate', state.birthdayDate);
 
     window.romanticAudio.setPlaylist(state.customTracks);
     renderPlaylistUI();
+    renderCouponsGrid();
+    renderAdminCouponsList();
     updateProfileDisplays();
     initTogetherCounter();
     initBirthdayCountdown();
 
-    await seedInitialMemories();
+    await cleanLegacyDummyMemories();
     await refreshMemories();
     renderCalendar();
   } catch (err) {
@@ -242,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!state.birthdayDate) return;
       const now = new Date();
       const bdayInput = new Date(state.birthdayDate);
-      
+
       // Calculate next birthday date this year or next year
       let nextBday = new Date(now.getFullYear(), bdayInput.getMonth(), bdayInput.getDate(), 0, 0, 0);
       if (nextBday < now && (now - nextBday) > 24 * 3600 * 1000) {
@@ -289,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderPlaylistUI();
 
     // Global function for instant toggle
-    window.togglePlaylistCard = function(e) {
+    window.togglePlaylistCard = function (e) {
       if (e) e.stopPropagation();
       const card = document.getElementById('floating-playlist-card');
       if (card) {
@@ -322,17 +348,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // Quick add button in playlist popup
-    if (quickAddBtn) {
-      quickAddBtn.addEventListener('click', () => {
-        if (floatingPlaylistCard) {
-          floatingPlaylistCard.classList.remove('active');
-        }
-        const settingsModal = document.getElementById('settings-modal');
-        if (settingsModal) {
-          updateProfileDisplays();
-          settingsModal.classList.add('active');
-        }
+    // Toggle Add Song Box inside Playlist Card
+    const toggleAddBoxBtn = document.getElementById('toggle-add-song-box-btn');
+    const addSongBox = document.getElementById('add-song-collapsible-box');
+    if (toggleAddBoxBtn && addSongBox) {
+      toggleAddBoxBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = addSongBox.style.display === 'none';
+        addSongBox.style.display = isHidden ? 'block' : 'none';
+        toggleAddBoxBtn.innerHTML = isHidden ? '<span>✕</span> Tutup Form' : '<span>+</span> Tambah Lagu Baru';
       });
     }
 
@@ -345,14 +369,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    // Handle Adding New Song in Settings Modal
+    // Handle Adding New Song in Playlist Card
     const addSongBtn = document.getElementById('add-song-to-playlist-btn');
     const songTitleInput = document.getElementById('new-song-title');
     const songFileInput = document.getElementById('new-song-file');
     const uploadMusicIndicator = document.getElementById('upload-music-indicator');
 
     if (addSongBtn && songFileInput) {
-      addSongBtn.addEventListener('click', async () => {
+      addSongBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const file = songFileInput.files[0];
         if (!file) {
           alert('Silakan pilih file musik (MP3) terlebih dahulu!');
@@ -360,10 +385,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const songTitle = (songTitleInput ? songTitleInput.value.trim() : '') || file.name.replace(/\.[^/.]+$/, '');
-        
+
         if (uploadMusicIndicator) {
           uploadMusicIndicator.style.display = 'block';
-          uploadMusicIndicator.textContent = window.memoryDB.isCloudEnabled ? '⏳ Mengunggah lagu ke Cloud Storage...' : '⏳ Menyimpan lagu...';
+          uploadMusicIndicator.textContent = window.memoryDB.isCloudEnabled ? '⏳ Mengunggah ke Supabase Cloud...' : '⏳ Menyimpan lagu...';
         }
         addSongBtn.disabled = true;
 
@@ -372,7 +397,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (window.memoryDB.isCloudEnabled) {
             songUrl = await window.memoryDB.uploadFileToStorage(file);
           }
-          
+
           if (!songUrl) {
             songUrl = URL.createObjectURL(file);
           }
@@ -386,13 +411,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           state.customTracks.push(newTrack);
           await window.memoryDB.setSetting('playlist', state.customTracks);
-          
+
           window.romanticAudio.setPlaylist(state.customTracks);
           renderPlaylistUI();
 
-          // Reset inputs
+          // Reset inputs and hide form
           if (songTitleInput) songTitleInput.value = '';
           songFileInput.value = '';
+          if (addSongBox) addSongBox.style.display = 'none';
+          if (toggleAddBoxBtn) toggleAddBoxBtn.innerHTML = '<span>+</span> Tambah Lagu Baru';
 
           window.confetti.burst({ count: 30 });
         } catch (err) {
@@ -406,37 +433,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Render Playlist UI in both dropdown and settings modal
+  // Render Playlist UI in dropdown and settings modal
   function renderPlaylistUI() {
     const dropdownList = document.getElementById('playlist-items-list');
-    const settingsList = document.getElementById('settings-playlist-list');
-    const countBadge = document.getElementById('playlist-count-badge');
     const countLabel = document.getElementById('playlist-count-label');
 
     const allTracks = window.romanticAudio.playlist || [];
 
-    if (countBadge) {
-      countBadge.textContent = `${allTracks.length} Lagu`;
-    }
     if (countLabel) {
       countLabel.textContent = `${allTracks.length} Lagu`;
     }
 
-    // 1. Render in Dropdown Popup
+    // 1. Render in Floating Playlist Card
     if (dropdownList) {
       dropdownList.innerHTML = '';
       allTracks.forEach((track, index) => {
         const item = document.createElement('div');
         item.className = 'playlist-item' + (index === window.romanticAudio.currentIndex ? ' active' : '');
         item.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1;">
             <span style="font-size: 1rem;">${track.isDefault ? '🎹' : '🎵'}</span>
             <div class="playlist-item-title" title="${escapeHtml(track.title)}">${escapeHtml(track.title)}</div>
           </div>
-          <span class="playlist-item-status">${index === window.romanticAudio.currentIndex ? '▶️' : ''}</span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="playlist-item-status">${index === window.romanticAudio.currentIndex ? '▶️' : ''}</span>
+            ${!track.isDefault ? `<button type="button" class="btn-icon" data-delete-song="${track.id}" title="Hapus Lagu" style="width: 22px; height: 22px; font-size: 0.72rem; color: #e63946; background: #fff0f3; padding: 0;">🗑️</button>` : ''}
+          </div>
         `;
 
+        // Click to play song
         item.addEventListener('click', (e) => {
+          if (e.target.closest('[data-delete-song]')) return;
           e.stopPropagation();
           window.romanticAudio.selectTrack(index);
           if (!window.romanticAudio.isPlaying) {
@@ -444,6 +471,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
           renderPlaylistUI();
         });
+
+        // Delete custom song handler
+        const delBtn = item.querySelector(`[data-delete-song="${track.id}"]`);
+        if (delBtn) {
+          delBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`Hapus lagu "${track.title}" dari playlist?`)) {
+              state.customTracks = state.customTracks.filter(t => t.id !== track.id);
+              await window.memoryDB.setSetting('playlist', state.customTracks);
+              window.romanticAudio.setPlaylist(state.customTracks);
+              renderPlaylistUI();
+            }
+          });
+        }
 
         dropdownList.appendChild(item);
       });
@@ -455,7 +496,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       allTracks.forEach((track, index) => {
         const item = document.createElement('div');
         item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: white; border: 1px solid #f1f3f5; border-radius: 6px; font-size: 0.82rem;';
-        
+
         item.innerHTML = `
           <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
             <span>${track.isDefault ? '🎹' : '🎵'}</span>
@@ -487,74 +528,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // --- Seed Initial Samples ---
-  async function seedInitialMemories() {
-    const existing = await window.memoryDB.getAllMemories();
-    if (existing.length === 0) {
-      const defaultSamples = [
-        {
-          title: 'Kencan Pertama Kita di Kedai Kopi',
-          date: '2025-02-14',
-          type: 'photo',
-          category: 'date',
-          mediaUrl: createSvgPlaceholder('☕ Kencan Pertama', '#ffccd5', 'Secangkir kopi hangat dan senyuman manismu'),
-          note: 'Hari di mana kita pertama kali ngobrol berjam-jam tanpa terasa waktu berlalu. Matamu begitu berbinar saat menceritakan impianmu.'
-        },
-        {
-          title: 'Piknik Senja di Tepi Pantai',
-          date: '2025-06-20',
-          type: 'photo',
-          category: 'favorite',
-          mediaUrl: createSvgPlaceholder('🌅 Sunset Pantai', '#ffd166', 'Momen matahari terbenam bersama kamu'),
-          note: 'Angin sepoi-sepoi, deburan ombak, dan tanganmu yang menggenggam erat tanganku. Salah satu momen paling damai bersamamu.'
-        },
-        {
-          title: 'Kompilasi Momen Random & Lucu',
-          date: '2025-10-05',
-          type: 'photo',
-          category: 'funny',
-          mediaUrl: createSvgPlaceholder('😂 Momen Lucu Berdua', '#a18cd1', 'Ketawa lepas bareng tanpa jaim'),
-          note: 'Saat kita nyoba bikin kue tapi gosong dan malah ketawa bareng sampai sakit perut. Selalu bahagia saat di dekatmu!'
-        }
+  // --- Clean Up Legacy Dummy / Sample Data ---
+  async function cleanLegacyDummyMemories() {
+    try {
+      const existing = await window.memoryDB.getAllMemories();
+      const dummyTitles = [
+        'Kencan Pertama Kita di Kedai Kopi',
+        'Piknik Senja di Tepi Pantai',
+        'Kompilasi Momen Random & Lucu'
       ];
-
-      for (const sample of defaultSamples) {
-        await window.memoryDB.addMemory(sample);
+      for (const m of existing) {
+        if (dummyTitles.includes(m.title) || (typeof m.mediaUrl === 'string' && m.mediaUrl.startsWith('data:image/svg+xml'))) {
+          await window.memoryDB.deleteMemory(m.id);
+        }
       }
+    } catch (e) {
+      console.warn('Dummy cleanup notice:', e);
     }
-  }
-
-  function createSvgPlaceholder(title, bgColor, subtitle) {
-    const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="450" viewBox="0 0 600 450">
-        <defs>
-          <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${bgColor}" stop-opacity="0.85"/>
-            <stop offset="100%" stop-color="#ff758c" stop-opacity="0.95"/>
-          </linearGradient>
-        </defs>
-        <rect width="600" height="450" fill="url(#g)"/>
-        <circle cx="300" cy="180" r="70" fill="rgba(255,255,255,0.3)"/>
-        <text x="300" y="195" font-family="'Plus Jakarta Sans', sans-serif" font-size="45" text-anchor="middle" fill="#ffffff">💖</text>
-        <text x="300" y="290" font-family="'Playfair Display', serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#ffffff">${title}</text>
-        <text x="300" y="325" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" text-anchor="middle" fill="rgba(255,255,255,0.9)">${subtitle}</text>
-      </svg>
-    `;
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
 
   // --- Render Memories Grid ---
   async function refreshMemories() {
     const rawMemories = await window.memoryDB.getAllMemories();
-    
+
+    const dummyTitles = [
+      'Kencan Pertama Kita di Kedai Kopi',
+      'Piknik Senja di Tepi Pantai',
+      'Kompilasi Momen Random & Lucu'
+    ];
+
+    // Instant filter out any legacy dummy samples
+    const realMemories = rawMemories.filter(m => {
+      if (dummyTitles.includes(m.title)) return false;
+      if (typeof m.mediaUrl === 'string' && m.mediaUrl.startsWith('data:image/svg+xml')) return false;
+      return true;
+    });
+
     // Revoke old object URLs to prevent memory leaks
     state.activeObjectUrls.forEach(url => {
-      try { URL.revokeObjectURL(url); } catch (e) {}
+      try { URL.revokeObjectURL(url); } catch (e) { }
     });
     state.activeObjectUrls = [];
 
     // Process Blobs into playable URLs with auto-migration for legacy base64
-    state.memories = rawMemories.map(m => {
+    state.memories = realMemories.map(m => {
       let resolvedUrl = m.mediaUrl;
 
       if (m.mediaBlob instanceof Blob) {
@@ -600,11 +617,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filtered.length === 0) {
       container.innerHTML = `
         <div class="empty-memory-state">
-          <div class="empty-icon">📸</div>
-          <h3>Belum Ada Memori di Kategori Ini</h3>
-          <p style="margin-top: 6px;">Klik tombol <strong>+ Tambah Memori</strong> di atas untuk mengabadikan momen berharga kalian!</p>
+          <div class="empty-icon">📸✨</div>
+          <h3 style="font-family: var(--font-serif); color: var(--deep-wine); font-size: 1.35rem; margin-bottom: 8px;">Belum Ada Memori yang Diunggah</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 420px; margin: 0 auto 18px; line-height: 1.5;">
+            Mulai abadikan momen-momen indah bersama <strong>${escapeHtml(state.herName)}</strong>! Klik tombol di bawah untuk mengunggah foto atau video kenangan pertama kalian.
+          </p>
+          <button type="button" class="btn-primary" id="empty-add-memory-btn" style="margin: 0 auto; padding: 10px 22px;">
+            <span>+</span> Upload Memori Pertama
+          </button>
         </div>
       `;
+
+      const emptyBtn = document.getElementById('empty-add-memory-btn');
+      if (emptyBtn) {
+        emptyBtn.addEventListener('click', () => {
+          const navAddBtn = document.getElementById('add-memory-nav-btn');
+          if (navAddBtn) navAddBtn.click();
+        });
+      }
       return;
     }
 
@@ -612,7 +642,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     filtered.forEach(memory => {
       const card = document.createElement('div');
       card.className = 'polaroid-card';
-      
+
       const tagLabels = {
         favorite: '⭐ Favorit',
         date: '☕ Kencan',
@@ -656,7 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           card.addEventListener('mouseenter', () => {
             videoEl.play().then(() => {
               if (playBadge) playBadge.style.opacity = '0.25';
-            }).catch(() => {});
+            }).catch(() => { });
           });
           card.addEventListener('mouseleave', () => {
             videoEl.pause();
@@ -796,7 +826,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // View Memory Modal
     const viewModal = document.getElementById('view-memory-modal');
     const closeViewBtn = document.getElementById('close-view-modal');
-    
+
     const closeViewModal = () => {
       const mediaContainer = document.getElementById('view-media-container');
       if (mediaContainer) {
@@ -833,7 +863,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.herName = document.getElementById('setting-her-name').value.trim() || 'Sasa';
         state.startDate = document.getElementById('setting-start-date').value;
         state.birthdayDate = document.getElementById('setting-bday-date').value;
-        
+
         const supabaseUrl = document.getElementById('setting-supabase-url').value.trim();
         const supabaseKey = document.getElementById('setting-supabase-key').value.trim();
 
@@ -955,7 +985,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               // Upload to Supabase Storage
               mediaUrl = await window.memoryDB.uploadFileToStorage(state.uploadedFileBlob);
             }
-            
+
             // If cloud upload wasn't used or failed, fallback to local Blob
             if (!mediaUrl) {
               mediaBlob = state.uploadedFileBlob;
@@ -1025,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         videoEl.play().catch(() => {
           // Normal: user can tap the native play button on the video player
         });
-        
+
         videoEl.onerror = () => {
           console.warn('Video failed to load:', videoEl.error);
           const errorMsg = document.createElement('div');
@@ -1123,6 +1153,278 @@ document.addEventListener('DOMContentLoaded', async () => {
         flame.classList.add('blown');
         window.confetti.burst({ count: 30 });
       });
+    });
+
+    initCouponsSystem();
+  }
+
+  // =========================================================
+  // 🔐 ROMANTIC LOGIN / PASSCODE GATE SYSTEM 🔐
+  // =========================================================
+  function initRomanticLogin() {
+    const loginOverlay = document.getElementById('romantic-login-overlay');
+    const loginForm = document.getElementById('login-passcode-form');
+    const passcodeInput = document.getElementById('love-passcode-input');
+    const errorMsg = document.getElementById('login-error-msg');
+    const lockBtn = document.getElementById('lock-vault-btn');
+
+    // Check if already authenticated in this session
+    const savedRole = sessionStorage.getItem('mv_auth_role');
+    if (savedRole) {
+      applyUserRole(savedRole);
+      if (loginOverlay) loginOverlay.classList.add('unlocked');
+    }
+
+    if (loginForm && passcodeInput) {
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = passcodeInput.value.trim().toLowerCase();
+        
+        const herValidCodes = [
+          String(COUPLE_CONFIG.herPasscode).toLowerCase(),
+          '1001', '10012026', '10-01-2026', 'anggun', 'anggunly', '2708', '27082006'
+        ];
+
+        const adminValidCodes = [
+          String(COUPLE_CONFIG.adminPasscode).toLowerCase(),
+          'rifai', 'rifai123', 'admin', 'admin123', 'rfa'
+        ];
+
+        if (adminValidCodes.includes(code)) {
+          // Logged in as Admin Rifai
+          applyUserRole('admin');
+          sessionStorage.setItem('mv_auth_role', 'admin');
+          if (loginOverlay) loginOverlay.classList.add('unlocked');
+          if (errorMsg) errorMsg.style.display = 'none';
+          passcodeInput.value = '';
+          window.confetti.burst({ count: 50 });
+        } else if (herValidCodes.includes(code)) {
+          // Logged in as Anggunly (Queen)
+          applyUserRole('anggunly');
+          sessionStorage.setItem('mv_auth_role', 'anggunly');
+          if (loginOverlay) loginOverlay.classList.add('unlocked');
+          if (errorMsg) errorMsg.style.display = 'none';
+          passcodeInput.value = '';
+          
+          // Sweet romantic fanfare!
+          window.confetti.celebrate();
+          if (!window.romanticAudio.isPlaying) {
+            window.romanticAudio.toggle();
+          }
+        } else {
+          // Wrong passcode
+          if (errorMsg) {
+            errorMsg.style.display = 'block';
+            errorMsg.classList.remove('shakeError');
+            void errorMsg.offsetWidth; // trigger reflow
+            errorMsg.classList.add('shakeError');
+          }
+        }
+      });
+    }
+
+    if (lockBtn) {
+      lockBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('mv_auth_role');
+        if (loginOverlay) {
+          loginOverlay.classList.remove('unlocked');
+          if (passcodeInput) passcodeInput.focus();
+        }
+      });
+    }
+  }
+
+  function applyUserRole(role) {
+    state.currentUserRole = role;
+    const adminBtn = document.getElementById('admin-coupon-btn');
+    const roleLabel = document.getElementById('user-role-label');
+
+    if (role === 'admin') {
+      if (adminBtn) adminBtn.style.display = 'flex';
+      if (roleLabel) roleLabel.innerHTML = `👑 Admin ${state.myName}`;
+    } else {
+      if (adminBtn) adminBtn.style.display = 'none';
+      if (roleLabel) roleLabel.innerHTML = `👑 ${state.herName} 💖`;
+    }
+
+    renderAdminCouponsList();
+  }
+
+  // =========================================================
+  // 🎟️ LOVE COUPONS SYSTEM & ADMIN SYNC 🎟️
+  // =========================================================
+  const AVAILABLE_COUPONS = [
+    { id: 'c1', title: 'Free Pijat & Manja', desc: 'Berlaku kapan saja saat kamu capek', icon: '💆‍♀️' },
+    { id: 'c2', title: 'Dinner Romantis Favorit Kamu', desc: 'Bebas pilih menu & tempat makan favorit', icon: '🍽️' },
+    { id: 'c3', title: 'Movie Date & Popcorn', desc: 'Bebas pilih film apapun yang ingin ditonton bareng', icon: '🍿' },
+    { id: 'c4', title: 'Peluk & Dengerin Curhat Sepuasnya', desc: 'Tanpa interupsi & batas waktu untukmu', icon: '🤗' },
+    { id: 'c5', title: 'Ice Cream & Sweet Treats', desc: 'Bebas jajan es krim & dessert manis sepuasnya', icon: '🍦' },
+    { id: 'c6', title: 'Wishlist Shopping Day', desc: 'Wujudkan 1 keinginan belanja spesial dari Rifai', icon: '🛍️' }
+  ];
+
+  function initCouponsSystem() {
+    renderCouponsGrid();
+    initAdminCouponsModal();
+  }
+
+  // Render Coupons in Birthday Celebration Modal
+  function renderCouponsGrid() {
+    const container = document.getElementById('coupons-grid-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const claimedMap = new Map((state.claimedCoupons || []).map(c => [c.id, c]));
+
+    AVAILABLE_COUPONS.forEach(coupon => {
+      const isClaimed = claimedMap.has(coupon.id);
+      const claimedData = claimedMap.get(coupon.id);
+
+      const card = document.createElement('div');
+      card.className = 'coupon-card' + (isClaimed ? ' claimed' : '');
+      
+      card.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+          <span style="font-size: 1.6rem;">${coupon.icon}</span>
+          <div>
+            <strong style="font-size: 0.88rem; color: var(--deep-wine); display: block;">${escapeHtml(coupon.title)}</strong>
+            <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(coupon.desc)}</span>
+            ${isClaimed ? `<span style="display: block; font-size: 0.72rem; color: #20c997; font-weight: 700; margin-top: 2px;">✅ Sudah Diklaim (${formatDateIndo(claimedData.claimedAt ? claimedData.claimedAt.split('T')[0] : '')})</span>` : ''}
+          </div>
+        </div>
+        <div>
+          <span class="claim-badge">${isClaimed ? 'TERKLAIM ✅' : 'KLAIM 💌'}</span>
+        </div>
+      `;
+
+      if (!isClaimed) {
+        card.addEventListener('click', async () => {
+          if (confirm(`Klaim kupon "${coupon.title}" sekarang?\nPermintaan ini akan otomatis masuk ke akun Rifai 💌`)) {
+            const newClaim = {
+              id: coupon.id,
+              title: coupon.title,
+              icon: coupon.icon,
+              desc: coupon.desc,
+              claimedBy: state.herName,
+              claimedAt: new Date().toISOString(),
+              status: 'pending'
+            };
+
+            state.claimedCoupons.push(newClaim);
+            await window.memoryDB.setSetting('claimed_coupons', state.claimedCoupons);
+            
+            renderCouponsGrid();
+            renderAdminCouponsList();
+            window.confetti.celebrate();
+            alert(`🎉 Horeee! Kupon "${coupon.title}" berhasil kamu klaim!\nPermintaanmu sudah otomatis terkirim ke Rifai ❤️`);
+          }
+        });
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  // Admin Coupons Modal Controller
+  function initAdminCouponsModal() {
+    const adminBtn = document.getElementById('admin-coupon-btn');
+    const adminModal = document.getElementById('admin-coupons-modal');
+    const closeModalBtn = document.getElementById('close-admin-coupons-modal');
+
+    if (adminBtn && adminModal) {
+      adminBtn.addEventListener('click', () => {
+        renderAdminCouponsList();
+        adminModal.classList.add('active');
+      });
+    }
+
+    if (closeModalBtn && adminModal) {
+      closeModalBtn.addEventListener('click', () => {
+        adminModal.classList.remove('active');
+      });
+    }
+  }
+
+  // Render claimed coupons list for Admin Rifai
+  function renderAdminCouponsList() {
+    const listEl = document.getElementById('admin-coupons-list');
+    const badgeEl = document.getElementById('admin-coupon-count-badge');
+    const coupons = state.claimedCoupons || [];
+
+    const pendingCoupons = coupons.filter(c => c.status !== 'completed');
+
+    if (badgeEl) {
+      badgeEl.textContent = `${pendingCoupons.length} Kupon`;
+      badgeEl.style.color = pendingCoupons.length > 0 ? '#e63946' : '#20c997';
+    }
+
+    if (!listEl) return;
+
+    if (coupons.length === 0) {
+      listEl.innerHTML = `
+        <div style="text-align: center; padding: 30px 10px; color: var(--text-muted);">
+          <span style="font-size: 2.2rem; display: block; margin-bottom: 8px;">💌</span>
+          <p style="font-size: 0.9rem;">Belum ada kupon yang diklaim oleh Anggunly.</p>
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = '';
+    coupons.forEach(c => {
+      const item = document.createElement('div');
+      const isCompleted = c.status === 'completed';
+      
+      item.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: ${isCompleted ? '#f8f9fa' : '#fff0f3'}; border: 1.5px solid ${isCompleted ? '#dee2e6' : '#ffccd5'}; border-radius: 10px; transition: all 0.2s ease;`;
+      
+      const claimedDate = c.claimedAt ? new Date(c.claimedAt).toLocaleString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+
+      item.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.8rem;">${c.icon || '🎟️'}</span>
+          <div>
+            <strong style="font-size: 0.92rem; color: var(--deep-wine); text-decoration: ${isCompleted ? 'line-through' : 'none'};">${escapeHtml(c.title)}</strong>
+            <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">
+              Diklaim oleh: <strong>${escapeHtml(c.claimedBy || 'Anggunly')}</strong> • ${claimedDate}
+            </div>
+            <span style="display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-top: 4px; font-weight: 700; background: ${isCompleted ? '#e9ecef' : '#ffe3e8'}; color: ${isCompleted ? '#6c757d' : '#d6336c'};">
+              ${isCompleted ? 'Sudah Ditunaikan' : '⏳ Perlu Ditepati'}
+            </span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button type="button" class="btn-primary" data-toggle-coupon="${c.id}" style="font-size: 0.75rem; padding: 6px 12px; background: ${isCompleted ? '#adb5bd' : 'linear-gradient(135deg, #20c997, #0ca678)'};">
+            ${isCompleted ? 'Batal' : '✅ Tunaikan'}
+          </button>
+          <button type="button" class="btn-icon" data-delete-coupon="${c.id}" title="Hapus Catatan Kupon" style="width: 28px; height: 28px; font-size: 0.75rem; color: #e63946;">🗑️</button>
+        </div>
+      `;
+
+      // Toggle status button
+      const toggleBtn = item.querySelector(`[data-toggle-coupon="${c.id}"]`);
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', async () => {
+          c.status = c.status === 'completed' ? 'pending' : 'completed';
+          await window.memoryDB.setSetting('claimed_coupons', state.claimedCoupons);
+          renderAdminCouponsList();
+          renderCouponsGrid();
+          if (c.status === 'completed') window.confetti.burst({ count: 40 });
+        });
+      }
+
+      // Delete coupon record
+      const delBtn = item.querySelector(`[data-delete-coupon="${c.id}"]`);
+      if (delBtn) {
+        delBtn.addEventListener('click', async () => {
+          if (confirm(`Hapus catatan klaim kupon "${c.title}"?`)) {
+            state.claimedCoupons = state.claimedCoupons.filter(item => item.id !== c.id);
+            await window.memoryDB.setSetting('claimed_coupons', state.claimedCoupons);
+            renderAdminCouponsList();
+            renderCouponsGrid();
+          }
+        });
+      }
+
+      listEl.appendChild(item);
     });
   }
 });

@@ -2,13 +2,17 @@
 const LOCAL_DB_NAME = 'MemoryVaultDB';
 const LOCAL_DB_VERSION = 2;
 
+// Default Supabase Cloud Connection (Auto-connect on all devices & domains)
+const DEFAULT_SUPABASE_URL = 'https://taabfvcennoerwlxzduq.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_ALTQ9Mt2tyk6K69g7ASInA_C9MI1lHN';
+
 class UnifiedMemoryDB {
   constructor() {
     this.indexedDB = null;
     this.supabase = null;
     this.isCloudEnabled = false;
-    this.supabaseUrl = localStorage.getItem('mv_supabase_url') || '';
-    this.supabaseKey = localStorage.getItem('mv_supabase_key') || '';
+    this.supabaseUrl = localStorage.getItem('mv_supabase_url') || DEFAULT_SUPABASE_URL;
+    this.supabaseKey = localStorage.getItem('mv_supabase_key') || DEFAULT_SUPABASE_KEY;
   }
 
   async init() {
@@ -217,11 +221,16 @@ class UnifiedMemoryDB {
         resolve(true);
         return;
       }
-      const tx = this.indexedDB.transaction(['memories'], 'readwrite');
-      const store = tx.objectStore('memories');
-      const request = store.delete(Number(id));
-      request.onsuccess = () => resolve(true);
-      request.onerror = () => resolve(true);
+      try {
+        const tx = this.indexedDB.transaction(['memories'], 'readwrite');
+        const store = tx.objectStore('memories');
+        store.delete(id);
+        if (!isNaN(Number(id))) store.delete(Number(id));
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(true);
+      } catch (e) {
+        resolve(true);
+      }
     });
   }
 
@@ -263,7 +272,7 @@ class UnifiedMemoryDB {
       try {
         await this.supabase
           .from('settings')
-          .upsert({ key, value, updated_at: new Date().toISOString() });
+          .upsert({ key, value });
       } catch (err) {
         console.warn('Supabase setSetting error:', err);
       }

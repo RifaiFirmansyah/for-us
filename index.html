@@ -10,6 +10,35 @@
 </head>
 <body>
 
+  <!-- Romantic Secret Passcode Login Overlay -->
+  <div class="romantic-login-overlay" id="romantic-login-overlay">
+    <div class="login-glass-card">
+      <div class="login-heart-badge">🔐</div>
+      <h2 class="login-title">Secret Love Vault</h2>
+      <p class="login-subtitle">
+        Ruang rahasia penuh kenangan cinta kita berdua. Masukkan kode cinta untuk membuka kunci kenangan...
+      </p>
+
+      <form id="login-passcode-form" class="login-form">
+        <div class="passcode-input-wrap">
+          <input type="password" id="love-passcode-input" class="form-input passcode-input" placeholder="Masukkan PIN / Kode Cinta..." autocomplete="off" required>
+        </div>
+
+        <button type="submit" class="btn-primary login-btn">
+          <span>💖</span> Buka Kunci Cinta
+        </button>
+
+        <div class="login-hint-text" id="login-hint-text">
+          💡 <em>Petunjuk: Tanggal spesial jadian kita (format: DDMM atau DDMMYYYY) atau PIN rahasia.</em>
+        </div>
+      </form>
+
+      <div class="login-error-msg" id="login-error-msg" style="display: none;">
+        ❌ Kode cinta belum tepat sayang, coba ingat-ingat tanggal spesial kita ya! 🥺
+      </div>
+    </div>
+  </div>
+
   <!-- Canvas Background for Floating Hearts / Stars -->
   <canvas id="particles-bg"></canvas>
 
@@ -22,10 +51,16 @@
       </a>
 
       <div class="nav-actions">
-        <!-- Settings Button -->
-        <button class="btn-icon" id="settings-btn" title="Pengaturan Pasangan & Tanggal" aria-label="Pengaturan">
-          ⚙️
+        <!-- Admin Coupon Inbox Button (Muncul jika Rifai login sbg Admin) -->
+        <button class="btn-icon" id="admin-coupon-btn" title="Kupon Hadiah dari Anggunly" style="display: none; background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c; font-size: 0.85rem; padding: 6px 14px; border-radius: var(--radius-full); gap: 6px; width: auto; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(255,107,139,0.15);">
+          <span>🎟️</span> <span id="admin-coupon-count-badge">0 Kupon</span>
         </button>
+
+        <!-- User Role Chip & Lock Button -->
+        <div id="user-role-badge" style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: var(--deep-wine); background: rgba(255,255,255,0.85); padding: 5px 12px; border-radius: var(--radius-full); border: 1px solid rgba(255,107,139,0.3); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <span id="user-role-label">👑 Anggunly</span>
+          <button id="lock-vault-btn" title="Kunci Kembali / Ganti Akun" style="background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0 2px;" aria-label="Kunci Website">🔒</button>
+        </div>
 
         <!-- Add Memory Button -->
         <button class="btn-primary" id="add-memory-nav-btn">
@@ -223,10 +258,21 @@
       <!-- Rendered by JS -->
     </div>
 
-    <!-- Tombol Kelola / Tambah Lagu -->
-    <button class="playlist-add-quick-btn" id="playlist-add-quick-btn">
-      <span>+</span> Kelola / Tambah Lagu Baru
-    </button>
+    <!-- Collapsible Mini Form Tambah Lagu -->
+    <div style="margin-top: 10px;">
+      <button class="playlist-add-quick-btn" id="toggle-add-song-box-btn">
+        <span>+</span> Tambah Lagu Baru
+      </button>
+
+      <div id="add-song-collapsible-box" style="display: none; margin-top: 10px; padding: 12px; background: #fff5f7; border: 1px dashed var(--primary-pink); border-radius: var(--radius-sm);">
+        <input type="text" class="form-input" id="new-song-title" placeholder="Judul Lagu (misal: Perfect)" style="font-size: 0.82rem; padding: 6px 10px; margin-bottom: 8px;">
+        <input type="file" id="new-song-file" accept="audio/*" class="form-input" style="font-size: 0.78rem; padding: 4px 8px; margin-bottom: 8px;">
+        <button type="button" class="btn-primary" id="add-song-to-playlist-btn" style="width: 100%; justify-content: center; font-size: 0.8rem; padding: 6px 12px;">
+          <span>⬆️</span> Upload ke Cloud
+        </button>
+        <div id="upload-music-indicator" style="display: none; font-size: 0.72rem; color: var(--primary-pink); text-align: center; margin-top: 6px; font-weight: 600;">⏳ Mengunggah ke Supabase...</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -477,35 +523,12 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
 
       <!-- Love Coupons Section -->
       <h3 style="font-family: var(--font-serif); margin-top: 24px; color: var(--deep-wine);">🎟️ Klaim Kupon Hadiah Cinta</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; text-align: left;">
-        <div class="envelope-item" style="border: 1px solid #ffd166; background: #fffdf5;">
-          <div>
-            <strong>💆‍♀️ Free Pijat & Manja</strong>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Berlaku kapan saja</div>
-          </div>
-          <span>✨</span>
-        </div>
-        <div class="envelope-item" style="border: 1px solid #ff758c; background: #fffdf5;">
-          <div>
-            <strong>🍽️ Dinner Favorit Kamu</strong>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Bebas pilih menu & tempat</div>
-          </div>
-          <span>✨</span>
-        </div>
-        <div class="envelope-item" style="border: 1px solid #06d6a0; background: #fffdf5;">
-          <div>
-            <strong>🍿 Movie Date & Snacks</strong>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Bebas pilih film apapun</div>
-          </div>
-          <span>✨</span>
-        </div>
-        <div class="envelope-item" style="border: 1px solid #118ab2; background: #fffdf5;">
-          <div>
-            <strong>🤗 Peluk & Dengerin Curhat</strong>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Tanpa interupsi & batas waktu</div>
-          </div>
-          <span>✨</span>
-        </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+        Klik kupon hadiah yang kamu inginkan! Permintaanmu akan langsung terkirim otomatis ke akun Rifai 💌✨
+      </p>
+
+      <div id="coupons-grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
+        <!-- Rendered by JS -->
       </div>
     </div>
   </div>
@@ -527,11 +550,27 @@ Semoga di usiamu yang baru ini, setiap impianmu tercapai, hatimu selalu dipenuhi
     </div>
   </div>
 
+  <!-- 6. Modal Admin: Kupon Masuk dari Anggunly (Khusus Akun Rifai) -->
+  <div class="modal-overlay" id="admin-coupons-modal">
+    <div class="modal-box" style="max-width: 580px;">
+      <button class="modal-close" id="close-admin-coupons-modal">&times;</button>
+      <div style="text-align: center; margin-bottom: 16px;">
+        <span style="font-size: 2.5rem;">👑💌</span>
+        <h2 class="modal-title" style="justify-content: center; margin-top: 4px;">Kupon Cinta dari Anggunly</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Daftar kupon hadiah yang telah dipilih dan diklaim oleh Anggunly:</p>
+      </div>
+
+      <div id="admin-coupons-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 360px; overflow-y: auto;">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/db.js?v=2.5"></script>
-  <script src="js/confetti.js?v=2.5"></script>
-  <script src="js/audio.js?v=2.5"></script>
-  <script src="js/app.js?v=2.5"></script>
+  <script src="js/db.js?v=4.0"></script>
+  <script src="js/confetti.js?v=4.0"></script>
+  <script src="js/audio.js?v=4.0"></script>
+  <script src="js/app.js?v=4.0"></script>
 </body>
 </html>

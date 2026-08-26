@@ -1185,3 +1185,179 @@ body {
     flex-direction: column;
   }
 }
+
+/* =========================================================
+   💖 ROMANTIC LOGIN / PASSCODE LOCK SCREEN 💖
+   ========================================================= */
+.romantic-login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, rgba(255, 230, 238, 0.96) 0%, rgba(255, 182, 193, 0.94) 100%);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.romantic-login-overlay.unlocked {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.login-glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 107, 139, 0.35);
+  border-radius: 28px;
+  padding: 40px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(255, 107, 139, 0.3), 0 0 40px rgba(255, 182, 193, 0.4);
+  animation: loginCardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes loginCardPop {
+  from { opacity: 0; transform: scale(0.85) translateY(30px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.login-heart-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff0f3, #ffe4eb);
+  border: 2px solid rgba(255, 107, 139, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 18px;
+  box-shadow: 0 8px 25px rgba(255, 107, 139, 0.25);
+  animation: heartPulse 1.6s infinite ease-in-out;
+}
+
+.login-title {
+  font-family: var(--font-serif);
+  color: var(--deep-wine);
+  font-size: 1.85rem;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.passcode-input-wrap {
+  position: relative;
+}
+
+.passcode-input {
+  text-align: center;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  padding: 14px 18px;
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(255, 107, 139, 0.3);
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.passcode-input:focus {
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 4px rgba(255, 107, 139, 0.2);
+}
+
+.login-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 14px;
+  font-size: 1.05rem;
+  border-radius: var(--radius-full);
+}
+
+.login-hint-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 14px;
+  line-height: 1.4;
+}
+
+.login-error-msg {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: #fff0f3;
+  border: 1px solid #ffccd5;
+  border-radius: var(--radius-sm);
+  color: #d6336c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  animation: shakeError 0.4s ease;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* Coupon Interactive Cards in Celebration Modal */
+.coupon-card {
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: white;
+  border: 1.5px solid rgba(255, 107, 139, 0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.coupon-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--primary-pink);
+  box-shadow: 0 8px 20px rgba(255, 107, 139, 0.2);
+}
+
+.coupon-card.claimed {
+  background: linear-gradient(135deg, #e6fcf5, #d3f9d8);
+  border-color: #38d9a9;
+  cursor: default;
+}
+
+.coupon-card.claimed:hover {
+  transform: none;
+}
+
+.claim-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary-pink), #ff477e);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.coupon-card.claimed .claim-badge {
+  background: #20c997;
+}
