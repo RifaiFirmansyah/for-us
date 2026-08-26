@@ -334,27 +334,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Global function for instant toggle
     window.togglePlaylistCard = function (e) {
-      if (e) e.stopPropagation();
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const card = document.getElementById('floating-playlist-card');
       if (card) {
         card.classList.toggle('active');
       }
     };
 
-    // Toggle Floating Playlist Drawer on Click FAB
-    if (musicFabBtn && floatingPlaylistCard) {
-      musicFabBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        window.togglePlaylistCard(e);
-      });
-    }
+    // Close playlist drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      const card = document.getElementById('floating-playlist-card');
+      const fab = document.getElementById('music-fab-btn');
+      if (card && card.classList.contains('active')) {
+        if (!card.contains(e.target) && (!fab || !fab.contains(e.target))) {
+          card.classList.remove('active');
+        }
+      }
+    });
 
-    // Close Playlist Drawer
+    // Close Playlist Drawer close button
     if (closePlaylistBtn && floatingPlaylistCard) {
-      closePlaylistBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      closePlaylistBtn.onclick = (e) => {
+        if (e) e.stopPropagation();
         floatingPlaylistCard.classList.remove('active');
-      });
+      };
     }
 
     // Play/Pause button inside the playlist card header
@@ -377,15 +383,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         toggleAddBoxBtn.innerHTML = isHidden ? '<span>✕</span> Tutup Form' : '<span>+</span> Tambah Lagu Baru';
       });
     }
-
-    // Close playlist drawer when clicking outside
-    document.addEventListener('click', (e) => {
-      if (floatingPlaylistCard && floatingPlaylistCard.classList.contains('active')) {
-        if (!floatingPlaylistCard.contains(e.target) && !musicFabBtn.contains(e.target)) {
-          floatingPlaylistCard.classList.remove('active');
-        }
-      }
-    });
 
     // Handle Adding New Song in Playlist Card
     const addSongBtn = document.getElementById('add-song-to-playlist-btn');
